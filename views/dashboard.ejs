@@ -1,14 +1,26 @@
 <%- include('header'); -%>
 
-<h1>Dashboard</h1>
 
-<div>
-    <% sketches.forEach(function(sketch) { %>
-        <div style="border: black 1px solid; margin: 16px;">
-            <h3><%= sketch.title %></h3>
-            <p><%= sketch.directory %></p>
-        </div>
-     <% }); %> 
+<div class="container px-4">
+    <h1>Dashboard</h1>
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Title</th>
+            <th scope="col">Path</th>
+          </tr>
+        </thead>
+        <tbody>
+            <% sketches.forEach(function(sketch) { %>
+                <tr>
+                    <th scope="row"><%= sketch.id %></th>
+                    <td><%= sketch.title %></td>
+                    <td><%= sketch.directory %></td>
+                </tr>
+            <% }); %> 
+        </tbody>
+      </table>
 </div>
 
 <%- include('footer'); -%>
