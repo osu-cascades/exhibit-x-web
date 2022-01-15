@@ -1,0 +1,14 @@
+<%- include('header'); -%>
+
+<h1>Dashboard</h1>
+
+<div>
+    <% sketches.forEach(function(sketch) { %>
+        <div style="border: black 1px solid; margin: 16px;">
+            <h3><%= sketch.title %></h3>
+            <p><%= sketch.directory %></p>
+        </div>
+     <% }); %> 
+</div>
+
+<%- include('footer'); -%>
