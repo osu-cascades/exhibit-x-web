@@ -17,18 +17,18 @@ router.post('/', async function(req, res, next) {
     Bucket: bucketName,
     Key: `${directory}${title}`
   }
-  s3.putObject(params, (err, data) => {
+  s3.putObject(params, async (err, data) => {
     if (err) {
       console.log(err, err.stack);
       res.sendStatus(400);
     } else {
-      prisma.sketch.create({
+      await prisma.sketch.create({
         data: {
           title,
           directory
         }
       });
-    res.redirect('/');
+      res.redirect('/');
     }
   });
 });
