@@ -1,10 +1,18 @@
 var express = require('express');
 var router = express.Router();
-var S3 = require('aws-sdk/clients/s3');
+const S3 = require('aws-sdk/clients/s3');
+const { PrismaClient } = require('@prisma/client');
 
-router.post('/', function(req, res, next) {
-  console.log(req.body);
-  console.log(req.files);
+const prisma = new PrismaClient();
+
+router.post('/', async function(req, res, next) {
+  const { file } = req.files;
+  await prisma.sketch.create({
+    data: {
+      title: file.name,
+      directory: '/'
+    }
+  });
   res.redirect('/');
 });
 

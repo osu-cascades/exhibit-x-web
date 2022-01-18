@@ -15,4 +15,5 @@ model Sketch {
   title     String
   directory String
   approved  Boolean @default(false)
+  createdAt DateTime @default(now())
 }
