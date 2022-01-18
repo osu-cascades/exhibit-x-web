@@ -36,14 +36,24 @@ router.post('/', async function(req, res, next) {
 // gets zip file of sketch with provided sketchID
 router.get('/', async function(req, res, next){
   const { sketchID } = req.query;
-  const { directory, title } = await prisma.sketch.findUnique({
-    where: { id: Number(sketchID) }
-  });
+  const { directory, title } = await prisma.sketch.findUnique({where: { id: Number(sketchID) }});
   const fileKey = `${directory}${title}`;
 
   res.attachment(fileKey);
   const fileStream = s3.getObject({Bucket: bucketName, Key: fileKey}).createReadStream();
   fileStream.pipe(res);
+});
+
+// TODO: add controls for exhibit admin to control current sketch
+// for now returns info for the most recently uploaded sketch
+router.get('/current', async function(req, res, next){
+  const { id } = await prisma.sketch.findFirst({
+    orderBy: { createdAt: "desc"}
+  });
+  res.send({
+    sketchID: id,
+    downloadURL: `${req.get('host')}/sketch?sketchID=${id}`
+  });
 });
 
 module.exports = router;
