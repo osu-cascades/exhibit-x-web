@@ -17,3 +17,8 @@ model Sketch {
   approved  Boolean @default(false)
   createdAt DateTime @default(now())
 }
+
+model ExhibitHeartbeat {
+  id           Int        @default(autoincrement()) @id
+  receivedAt   DateTime   @default(now())
+}
