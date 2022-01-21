@@ -28,7 +28,7 @@ router.post('/', async function(req, res, next) {
           directory
         }
       });
-      res.redirect('/');
+      res.redirect('/?event=upload_successful');
     }
   });
 });
