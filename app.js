@@ -4,6 +4,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const fileUpload = require("express-fileupload");
+const session = require('express-session');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -13,6 +14,8 @@ var exhibitRouter = require('./routes/exhibit');
 
 const prisma = require('./prisma');
 
+const { SESSION_SECRET } = process.env;
+
 var app = express();
 
 // view engine setup
@@ -20,6 +23,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 app.use(fileUpload());
+app.use(session({secret: SESSION_SECRET}))
 
 app.use(logger('dev'));
 app.use(express.json());

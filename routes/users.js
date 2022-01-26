@@ -1,9 +1,11 @@
 var express = require('express');
 var router = express.Router();
+const { signIn } = require('../utils/auth')
 
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
+router.post('/signIn', async function(req, res, next) {
+  const { credential } = req.body ;
+  req.session.user = await signIn(credential);
+  res.redirect('/');
 });
 
 module.exports = router;
