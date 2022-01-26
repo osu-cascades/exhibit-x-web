@@ -1,26 +1,50 @@
 <%- include('header'); -%>
 
 
-<div class="container px-4">
-    <h1>Dashboard</h1>
-    <table class="table">
-        <thead>
-          <tr>
-            <th scope="col">#</th>
-            <th scope="col">Title</th>
-            <th scope="col">Path</th>
-          </tr>
-        </thead>
-        <tbody>
-            <% sketches.forEach(function(sketch) { %>
+<div class="container">
+
+        <div class="card p-2 m-2">
+          <div class="d-flex">
+            <div class="flex-shrink-0">
+              <img style="height: 5em;" src=<%= stale ? "/images/sad_mac.png" : "/images/happy_mac.png" %> >
+            </div>
+            <div class="flex-grow-1 ms-3">
+              <h3 class="mt-0">Exhibit Status</h3>
+              <p>Last heard from: <%= lastHeartbeat %></p>
+            </div>
+            </div>
+        </div>
+
+
+        <div class="card p-2 m-2">
+          <h1>Dashboard</h1>
+          <table class="table">
+              <thead>
                 <tr>
-                    <th scope="row"><%= sketch.id %></th>
-                    <td><%= sketch.title %></td>
-                    <td><%= sketch.directory %></td>
+                  <th scope="col">#</th>
+                  <th scope="col">Title</th>
+                  <th scope="col">Path</th>
                 </tr>
-            <% }); %> 
-        </tbody>
-      </table>
+              </thead>
+              <tbody>
+                  <% sketches.forEach(function(sketch) { %>
+                      <tr>
+                          <th scope="row"><%= sketch.id %></th>
+                          <td><%= sketch.title %></td>
+                          <td><%= sketch.directory %></td>
+                      </tr>
+                  <% }); %> 
+              </tbody>
+            </table>
+
+        </div>
+      
+  
+     
+       
+     
+  
+  </div>
 </div>
 
 <%- include('footer'); -%>
