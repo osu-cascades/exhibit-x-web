@@ -1,8 +1,12 @@
 var express = require('express');
 var router = express.Router();
+const { verify } = require('../utils/auth')
 
-/* GET users listing. */
-router.get('/', function(req, res, next) {
+router.post('/signIn', function(req, res, next) {
+  console.log(req.body);
+  console.log(req.cookies);
+  const { credential } = req.body ;
+  verify(credential);
   res.send('respond with a resource');
 });
 

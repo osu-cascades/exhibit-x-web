@@ -1,4 +1,5 @@
 <%- include('header'); -%>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 <div class="container px-4">
   <h2>What is <%=title%>?</h2>
   <p>
@@ -17,10 +18,22 @@
     OSU's guidelines.
   </p>
   <h2>Submit a "Sketch"</h2>
-  <form action="/sketch" method="post", enctype="multipart/form-data">
-    <!-- <label for="email">OSU Email</label>
-    <input id="email" name="email" type="text" /> -->
-    <br />
+  <div
+    id="g_id_onload"
+    data-client_id="<%=oauthClientID%>"
+    data-login_uri="http://<%=host%>/users/signIn"
+    data-auto_prompt="false"
+  ></div>
+  <div
+    class="g_id_signin"
+    data-type="standard"
+    data-size="large"
+    data-theme="outline"
+    data-text="sign_in_with"
+    data-shape="rectangular"
+    data-logo_alignment="left"
+  ></div>
+  <form action="/sketch" method="post" , enctype="multipart/form-data">
     <label for="file">Processing Zip File</label>
     <input id="file" name="file" type="file" accept=".zip" />
     <br />
