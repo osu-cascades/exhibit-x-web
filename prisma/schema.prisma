@@ -17,3 +17,9 @@ model Sketch {
   approved  Boolean @default(false)
   createdAt DateTime @default(now())
 }
+
+model User {
+  id    Int   @default(autoincrement()) @id
+  email String
+  admin Boolean @default(false)
+}
