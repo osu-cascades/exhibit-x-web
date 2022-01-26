@@ -9,7 +9,7 @@ router.get('/', async function(req, res, next) {
     const lastHeartbeat = await prisma.exhibitHeartbeat.findFirst({
         orderBy: { receivedAt: "desc"}
       });
-    const stale = lastHeartbeat ? moment.duration(moment().diff(lastHeartbeat.receivedAt)).asMinutes() > 5 : true;
+    const stale = lastHeartbeat ? moment.duration(moment().diff(lastHeartbeat.receivedAt)).asMinutes() > 2 : true;
     res.render('dashboard', { sketches: sketches, lastHeartbeat: lastHeartbeat ? moment(lastHeartbeat.receivedAt).fromNow() : "Never", stale: stale });
 });
 
