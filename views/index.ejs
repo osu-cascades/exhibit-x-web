@@ -18,6 +18,14 @@
     OSU's guidelines.
   </p>
   <h2>Submit a "Sketch"</h2>
+  <% if(signedIn) { %>
+  <form action="/sketch" method="post" , enctype="multipart/form-data">
+    <label for="file">Processing Zip File</label>
+    <input id="file" name="file" type="file" accept=".zip" required />
+    <br />
+    <input type="submit" />
+  </form>
+  <% } else { %>
   <div
     id="g_id_onload"
     data-client_id="<%=oauthClientID%>"
@@ -33,12 +41,7 @@
     data-shape="rectangular"
     data-logo_alignment="left"
   ></div>
-  <form action="/sketch" method="post" , enctype="multipart/form-data">
-    <label for="file">Processing Zip File</label>
-    <input id="file" name="file" type="file" accept=".zip" />
-    <br />
-    <input type="submit" />
-  </form>
+  <% } %>
   <h2>Helpful Links</h2>
   <ul>
     <li><a href="https://processing.org/">Processing</a></li>

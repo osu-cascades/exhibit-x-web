@@ -19,7 +19,6 @@ model Sketch {
 }
 
 model User {
-  id    Int   @default(autoincrement()) @id
-  email String
+  email String @id
   admin Boolean @default(false)
 }

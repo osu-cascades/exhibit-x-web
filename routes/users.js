@@ -1,13 +1,11 @@
 var express = require('express');
 var router = express.Router();
-const { verify } = require('../utils/auth')
+const { signIn } = require('../utils/auth')
 
-router.post('/signIn', function(req, res, next) {
-  console.log(req.body);
-  console.log(req.cookies);
+router.post('/signIn', async function(req, res, next) {
   const { credential } = req.body ;
-  verify(credential);
-  res.send('respond with a resource');
+  req.session.user = await signIn(credential);
+  res.redirect('/');
 });
 
 module.exports = router;
