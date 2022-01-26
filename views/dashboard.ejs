@@ -10,7 +10,10 @@
             </div>
             <div class="flex-grow-1 ms-3">
               <h3 class="mt-0">Exhibit Status</h3>
-              <p>Last heard from: <%= lastHeartbeat %></p>
+              <p>
+                Last heard from: <%= lastHeartbeat %><br>
+                Current sketch: <%= activeSketch || "unknown" %>
+              </p>
             </div>
             </div>
         </div>

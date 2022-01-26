@@ -28,3 +28,9 @@ model User {
   email String @id
   admin Boolean @default(false)
 }
+
+model SelectedSketch {
+  id           Int       @default(autoincrement()) @id
+  createdAt    DateTime  @default(now())
+  sketchId     Int
+}

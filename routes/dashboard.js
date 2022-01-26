@@ -10,7 +10,8 @@ router.get('/', async function(req, res, next) {
         orderBy: { receivedAt: "desc"}
       });
     const stale = lastHeartbeat ? moment.duration(moment().diff(lastHeartbeat.receivedAt)).asMinutes() > 2 : true;
-    res.render('dashboard', { sketches: sketches, lastHeartbeat: lastHeartbeat ? moment(lastHeartbeat.receivedAt).fromNow() : "Never", stale: stale });
+    const activeSketch = lastHeartbeat && lastHeartbeat.activeSketch > 0 ? lastHeartbeat.activeSketch : undefined;
+    res.render('dashboard', { sketches: sketches, lastHeartbeat: lastHeartbeat ? moment(lastHeartbeat.receivedAt).fromNow() : "Never", stale: stale, activeSketch: activeSketch });
 });
 
 module.exports = router;
