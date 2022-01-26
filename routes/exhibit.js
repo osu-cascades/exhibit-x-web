@@ -7,7 +7,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/heartbeat', async function(req, res, next) {
-    await prisma.exhibitHeartbeat.create({data:{}});
+    await prisma.exhibitHeartbeat.create({data:{activeSketch: parseInt(req.body.activeSketch) || -1}});
     res.sendStatus(200);
 });
 
