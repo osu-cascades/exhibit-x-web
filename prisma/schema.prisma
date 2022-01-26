@@ -21,6 +21,7 @@ model Sketch {
 model ExhibitHeartbeat {
   id           Int        @default(autoincrement()) @id
   receivedAt   DateTime   @default(now())
+  activeSketch Int        @default(-1)
 }
 
 model User {
