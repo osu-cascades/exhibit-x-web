@@ -57,4 +57,10 @@ router.get('/current', async function(req, res, next){
   });
 });
 
+// Select
+router.post('/select', async function(req, res, next) {
+  await prisma.selectedSketch.create({data:{sketchId: parseInt(req.body.sketchId) || -1}});
+  res.redirect('/dashboard');
+});
+
 module.exports = router;

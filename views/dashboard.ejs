@@ -20,21 +20,37 @@
 
 
         <div class="card p-2 m-2">
-          <h1>Dashboard</h1>
+          <h3>Sketches</h3>
           <table class="table">
               <thead>
                 <tr>
-                  <th scope="col">#</th>
+                  <th scope="col">Id</th>
                   <th scope="col">Title</th>
-                  <th scope="col">Path</th>
+                  <th scope="col">Actions</th>
                 </tr>
               </thead>
               <tbody>
                   <% sketches.forEach(function(sketch) { %>
-                      <tr>
+                      <% if( sketch.id == activeRow) { %>
+                        <tr class="table-success">
+                      <% } else if(sketch.id == pendingRow) { %>
+                        <tr class="table-warning">
+                      <% } else { %>
+                        <tr>
+                      <% } %>
                           <th scope="row"><%= sketch.id %></th>
                           <td><%= sketch.title %></td>
-                          <td><%= sketch.directory %></td>
+                          <td>
+                            <form action="/sketch/select" method="post">
+                              <% if( sketch.id == activeSketch) { %>
+                                <button class="btn btn-primary" disabled>Running</button>
+                              <% } else if(sketch.id == pendingRow) { %>
+                                <button class="btn btn-primary" disabled>Pending</button>
+                              <% } else { %>
+                                <button name="sketchId" value="<%= sketch.id %>" class="btn btn-primary">Run</button>
+                              <% } %>
+                          </form>
+                          </td>
                       </tr>
                   <% }); %> 
               </tbody>
