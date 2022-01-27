@@ -47,8 +47,19 @@ router.get('/', async function(req, res, next){
 // TODO: add controls for exhibit admin to control current sketch
 // for now returns info for the most recently uploaded sketch
 router.get('/current', async function(req, res, next){
-  const { id, title } = await prisma.sketch.findFirst({
+
+  const selectedSketch = await prisma.selectedSketch.findFirst({
     orderBy: { createdAt: "desc"}
+  });
+  const requestedSketchId = selectedSketch ? selectedSketch.sketchId : undefined;
+
+  if(!requestedSketchId) {
+    res.sendStatus(500);
+    return;
+  }
+
+  const { id, title } = await prisma.sketch.findUnique({
+    where: { id: requestedSketchId}
   });
   res.send({
     sketchID: id,
