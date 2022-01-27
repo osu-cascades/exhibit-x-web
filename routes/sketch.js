@@ -2,14 +2,16 @@ var express = require('express');
 var router = express.Router();
 const AWS = require('aws-sdk');
 const { PrismaClient } = require('@prisma/client');
+const { checkSignIn } = require('../utils/auth')
 
 const prisma = new PrismaClient();
 const s3 = new AWS.S3();
 const bucketName = 'exhibitx'; // TODO: add code for staging bucket
 
 // adds a new sketch file to s3 bucket and adds respective entry to sketch table
-router.post('/', async function(req, res, next) {
-  const { file } = req.files;
+router.post('/', checkSignIn, async function(req, res, next) {
+  const { file } = req.files || {};
+  if(!file) res.sendStatus(400);
   const directory = '/'; // TODO: have more complex directory system later
   const title = file.name;
   const params = {
