@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const { isSignedIn } = require('../utils/auth');
+const { ENVIRONMENT } = process.env;
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -11,7 +12,7 @@ router.get('/', function(req, res, next) {
   res.render('index', {
     title: 'Exhibit X',
     oauthClientID: process.env.OAUTH_CLIENT_ID,
-    host: req.get('host'),
+    host: `${ENVIRONMENT === 'dev' ? 'http' : 'https'}://${req.get('host')}`,
     signedIn: isSignedIn(req),
     success_message });
 });
