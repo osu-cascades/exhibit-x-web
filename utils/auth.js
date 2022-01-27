@@ -22,15 +22,31 @@ const signIn = async (token) => {
 };
 
 const isSignedIn = (req) => {
-  return Boolean(req.session.user)
-}
+  return Boolean(req?.session?.user);
+};
 
-const checkSignIn = (req, res) => {
+const checkSignIn = (req, res, next) => {
   if(isSignedIn(req)){
      next();
   } else {
      res.sendStatus(401);
   }
-}
+};
 
-module.exports = { isSignedIn, signIn, checkSignIn };
+const isAdmin = async (req) => {
+  const email = req?.session?.user?.email;
+  if (!email) return false;
+  const { admin } = await prisma.user.findUnique({where: {email} });
+  console.log(admin);
+  return admin;
+};
+
+const checkIsAdmin = async (req, res, next) => {
+  if(await isAdmin(req)){
+     next();
+  } else {
+     res.sendStatus(401);
+  }
+};
+
+module.exports = { isSignedIn, signIn, checkSignIn, isAdmin, checkIsAdmin };
