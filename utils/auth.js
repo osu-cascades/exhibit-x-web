@@ -22,7 +22,7 @@ const signIn = async (token) => {
 };
 
 const isSignedIn = (req) => {
-  return Boolean(req?.session?.user);
+  return Boolean(req?.session?.user?.email);
 };
 
 const checkSignIn = (req, res, next) => {
@@ -37,7 +37,6 @@ const isAdmin = async (req) => {
   const email = req?.session?.user?.email;
   if (!email) return false;
   const { admin } = await prisma.user.findUnique({where: {email} });
-  console.log(admin);
   return admin;
 };
 
