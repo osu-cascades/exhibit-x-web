@@ -23,15 +23,33 @@
     to ensure that they work properly with the <%=title%> setup and adhear to
     OSU's guidelines.
   </p>
-  <h2>Submit a "Sketch"</h2>
+  <h2>Submit a Processing "Sketch"</h2>
   <% if(signedIn) { %>
-  <form action="/sketch" method="post" , enctype="multipart/form-data">
-    <label for="file">Processing Zip File</label>
-    <input id="file" name="file" type="file" accept=".zip" required />
-    <br />
-    <input type="submit" />
+  <form
+    class="row g-3 needs-validation"
+    action="/sketch"
+    method="post"
+    enctype="multipart/form-data"
+  >
+    <div class="col-md-4">
+      <div class="form-outline">
+        <input
+          class="form-control"
+          id="file"
+          name="file"
+          type="file"
+          accept=".zip"
+          required
+        />
+        <div class="invalid-feedback">Must select a processing zip file</div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <input class="btn btn-primary" type="submit" />
+    </div>
   </form>
   <% } else { %>
+  <p>You must sign in with your OSU email to submit a processing sketch.</p>
   <div
     id="g_id_onload"
     data-client_id="<%=oauthClientID%>"
@@ -48,6 +66,7 @@
     data-logo_alignment="left"
   ></div>
   <% } %>
+
   <h2>Helpful Links</h2>
   <ul>
     <li><a href="https://processing.org/">Processing</a></li>
