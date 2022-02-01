@@ -31,7 +31,7 @@
                 </tr>
               </thead>
               <tbody>
-                  <% sketches.filter((sketch) => sketch.approved).forEach(function(sketch) { %>
+                  <% sketches.filter((sketch) => sketch.status === 'APPROVED').forEach(function(sketch) { %>
                       <% if( sketch.id == activeRow) { %>
                         <tr class="table-success">
                       <% } else if(sketch.id == pendingRow) { %>
@@ -71,7 +71,7 @@
                 </tr>
               </thead>
               <tbody>
-                  <% sketches.filter((sketch) => !sketch.approved).forEach(function(sketch) { %>
+                  <% sketches.filter((sketch) => sketch.status === 'PENDING').forEach(function(sketch) { %>
                         <tr>
                           <th scope="row"><%= sketch.id %></th>
                           <td><a href="/sketch?sketchID=<%= sketch.id %>" ><%= sketch.title %></a></td>
