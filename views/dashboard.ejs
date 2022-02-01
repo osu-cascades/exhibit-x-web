@@ -60,7 +60,7 @@
         </div>
 
         <div class="card p-2 m-2">
-          <h3>New Sketches</h3>
+          <h3>Unapproved Sketches</h3>
           <table class="table">
               <thead>
                 <tr>
@@ -77,10 +77,11 @@
                           <td><a href="/sketch?sketchID=<%= sketch.id %>" ><%= sketch.title %></a></td>
                           <td><%= sketch.userEmail %></td>
                           <td>
-                            <form action="" method="post">
-                                <button name="sketchId" value="<%= sketch.id %>" class="btn btn-success">Approve</button>
-                                <button name="sketchId" value="<%= sketch.id %>" class="btn btn-danger">Reject</button>
-                          </form>
+                            <form action="/sketch/evaluate" method="post">
+                                <input name="sketchId" type="hidden" value="<%= sketch.id %>"></input>
+                                <button name="action" value="approve" class="btn btn-success">Approve</button>
+                                <button name="action" value="reject" class="btn btn-danger">Reject</button>
+                            </form>
                           </td>
                       </tr>
                   <% }); %>

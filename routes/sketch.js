@@ -76,6 +76,15 @@ router.post('/select', checkIsAdmin, async function(req, res, next) {
   res.redirect('/dashboard');
 });
 
+router.post('/evaluate', checkIsAdmin, async function(req, res, next) {
+  const { sketchID, action } = req.body;
+  if (!(sketchID || action)) {
+    res.sendStatus(500);
+    return;
+  }
+  res.redirect('/dashboard');
+});
+
 // key user for grabbing file from s3
 const sketchKey = (sketch) => `${sketch.title}-${sketch.id}-${ENVIRONMENT}`;
 
