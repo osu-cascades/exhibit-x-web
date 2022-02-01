@@ -11,6 +11,7 @@ var usersRouter = require('./routes/users');
 var dashboardRouter = require('./routes/dashboard');
 var sketchRouter = require('./routes/sketch');
 var exhibitRouter = require('./routes/exhibit');
+var backgroundRouter = require('./routes/backgrounds');
 
 const prisma = require('./prisma');
 
@@ -36,6 +37,7 @@ app.use('/users', usersRouter);
 app.use('/dashboard', dashboardRouter);
 app.use('/sketch', sketchRouter);
 app.use('/exhibit', exhibitRouter);
+app.use('/background', backgroundRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
