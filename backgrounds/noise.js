@@ -11,6 +11,7 @@ var sketch = function(p) {
   var agentAlpha = 90;
   var strokeWidth = 0.3;
   var drawMode = 1;
+  var strokeColor = p.color(p.random(100),p.random(100), p.random(100), agentAlpha);
 
   p.setup = function() {
     canvas = p.createCanvas(p.windowWidth, p.windowHeight);
@@ -32,7 +33,7 @@ var sketch = function(p) {
     p.rect(0, 0, p.width, p.height);
 
     // Draw agents
-    p.stroke(0, agentAlpha);
+    p.stroke(strokeColor);
     for (var i = 0; i < agentCount; i++) {
       if (drawMode == 1) agents[i].update1(noiseScale, noiseStrength, strokeWidth);
       else agents[i].update2(noiseScale, noiseStrength, strokeWidth);
