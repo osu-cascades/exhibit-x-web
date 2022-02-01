@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 const AWS = require('aws-sdk');
 const { PrismaClient } = require('@prisma/client');
-const { checkSignIn } = require('../utils/auth');
+const { checkSignIn, checkIsAdmin } = require('../utils/auth');
 
 const { ENVIRONMENT } = process.env;
 
@@ -67,12 +67,12 @@ router.get('/current', async function(req, res, next){
 });
 
 // Select
-router.post('/select', async function(req, res, next) {
+router.post('/select', checkIsAdmin, async function(req, res, next) {
   await prisma.selectedSketch.create({data:{sketchId: parseInt(req.body.sketchId) || -1}});
   res.redirect('/dashboard');
 });
 
-// key user for grabing file from s3
+// key user for grabbing file from s3
 const sketchKey = (sketch) => `${sketch.title}-${sketch.id}-${ENVIRONMENT}`;
 
 module.exports = router;
