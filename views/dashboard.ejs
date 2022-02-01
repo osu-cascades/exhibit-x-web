@@ -26,11 +26,12 @@
                 <tr>
                   <th scope="col">Id</th>
                   <th scope="col">Title</th>
+                  <th scope="col">User</th>
                   <th scope="col">Actions</th>
                 </tr>
               </thead>
               <tbody>
-                  <% sketches.forEach(function(sketch) { %>
+                  <% sketches.filter((sketch) => sketch.approved).forEach(function(sketch) { %>
                       <% if( sketch.id == activeRow) { %>
                         <tr class="table-success">
                       <% } else if(sketch.id == pendingRow) { %>
@@ -40,6 +41,7 @@
                       <% } %>
                           <th scope="row"><%= sketch.id %></th>
                           <td><%= sketch.title %></td>
+                          <td><%= sketch.userEmail %></td>
                           <td>
                             <form action="/sketch/select" method="post">
                               <% if( sketch.id == activeSketch) { %>
@@ -52,17 +54,40 @@
                           </form>
                           </td>
                       </tr>
-                  <% }); %> 
+                  <% }); %>
               </tbody>
             </table>
-
         </div>
-      
-  
-     
-       
-     
-  
+
+        <div class="card p-2 m-2">
+          <h3>New Sketches</h3>
+          <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">Id</th>
+                  <th scope="col">Title</th>
+                  <th scope="col">User</th>
+                  <th scope="col">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                  <% sketches.filter((sketch) => !sketch.approved).forEach(function(sketch) { %>
+                        <tr>
+                          <th scope="row"><%= sketch.id %></th>
+                          <td><%= sketch.title %></td>
+                          <td><%= sketch.userEmail %></td>
+                          <td>
+                            <form action="" method="post">
+                                <button name="sketchId" value="<%= sketch.id %>" class="btn btn-success">Approve</button>
+                                <button name="sketchId" value="<%= sketch.id %>" class="btn btn-danger">Reject</button>
+                          </form>
+                          </td>
+                      </tr>
+                  <% }); %>
+              </tbody>
+            </table>
+        </div>
+
   </div>
 </div>
 
