@@ -10,10 +10,16 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Status {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
 model Sketch {
   id        Int      @default(autoincrement()) @id
   title     String
-  approved  Boolean  @default(false)
+  status    Status   @default(PENDING)
   createdAt DateTime @default(now())
   user      User     @relation(fields: [userEmail], references: [email])
   userEmail String
