@@ -76,12 +76,19 @@ router.post('/select', checkIsAdmin, async function(req, res, next) {
   res.redirect('/dashboard');
 });
 
+// changes the status of a sketch
 router.post('/evaluate', checkIsAdmin, async function(req, res, next) {
-  const { sketchID, action } = req.body;
-  if (!(sketchID || action)) {
+  const { sketchID, status } = req.body;
+  if (!(sketchID || ['APPROVED', 'REJECTED'].includes(status))) {
     res.sendStatus(500);
     return;
   }
+  await prisma.sketch.update({
+    where: {
+      id: parseInt(sketchID)
+    },
+    data: { status }
+  });
   res.redirect('/dashboard');
 });
 

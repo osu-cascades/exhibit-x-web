@@ -78,9 +78,9 @@
                           <td><%= sketch.userEmail %></td>
                           <td>
                             <form action="/sketch/evaluate" method="post">
-                                <input name="sketchId" type="hidden" value="<%= sketch.id %>"></input>
-                                <button name="action" value="approve" class="btn btn-success">Approve</button>
-                                <button name="action" value="reject" class="btn btn-danger">Reject</button>
+                                <input name="sketchID" type="hidden" value="<%= sketch.id %>"></input>
+                                <button name="status" value="APPROVED" class="btn btn-success">Approve</button>
+                                <button name="status" value="REJECTED" class="btn btn-danger">Reject</button>
                             </form>
                           </td>
                       </tr>
