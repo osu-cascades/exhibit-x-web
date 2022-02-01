@@ -74,7 +74,7 @@
                   <% sketches.filter((sketch) => !sketch.approved).forEach(function(sketch) { %>
                         <tr>
                           <th scope="row"><%= sketch.id %></th>
-                          <td><%= sketch.title %></td>
+                          <td><a href="/sketch?sketchID=<%= sketch.id %>" ><%= sketch.title %></a></td>
                           <td><%= sketch.userEmail %></td>
                           <td>
                             <form action="" method="post">

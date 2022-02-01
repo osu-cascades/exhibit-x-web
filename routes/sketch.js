@@ -35,6 +35,10 @@ router.post('/', checkSignIn, async function(req, res, next) {
 // gets zip file of sketch with provided sketchID
 router.get('/', async function(req, res, next){
   const { sketchID } = req.query;
+  if (!sketchID) {
+    res.sendStatus(500);
+    return;
+  }
   const sketch = await prisma.sketch.findUnique({where: { id: Number(sketchID) }});
 
   res.attachment(`${sketch.title}.zip`);
