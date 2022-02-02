@@ -3,6 +3,7 @@
 
 <div class="container">
 
+        <!-- Exhibit status table -->
         <div class="card p-2 m-2">
           <div class="d-flex">
             <div class="flex-shrink-0">
@@ -18,7 +19,7 @@
             </div>
         </div>
 
-
+        <!-- Sketch table card -->
         <div class="card p-2 m-2">
           <h3>Sketches</h3>
           <table class="table">
@@ -59,7 +60,28 @@
         </div>
       
   
-     
+        <!-- User table -->
+
+        <div class="card p-2 m-2">
+          <h3>Users</h3>
+          <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">Email</th>
+                  <th scope="col">Permission Level</th>
+                </tr>
+              </thead>
+              <tbody>
+                  <% users.forEach(function(user) { %>
+                        <tr>
+                          <td><%= user.email %></td>
+                          <td><%= user.admin ? "Admin" : "Standard" %></td>
+                      </tr>
+                  <% }); %> 
+              </tbody>
+            </table>
+
+        </div>
        
      
   
