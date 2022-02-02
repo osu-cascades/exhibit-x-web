@@ -14,7 +14,7 @@ router.post('/updateUser', checkIsAdmin, async function(req, res, next) {
       email: req.body.user
     },
     data: {
-      admin: 
+      admin: req.body.admin
     }
   });
 })
