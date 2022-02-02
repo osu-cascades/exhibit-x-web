@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 const AWS = require('aws-sdk');
 const { PrismaClient } = require('@prisma/client');
-const { checkSignIn } = require('../utils/auth');
+const { checkSignIn, checkIsAdmin } = require('../utils/auth');
 
 const { ENVIRONMENT } = process.env;
 
@@ -35,6 +35,10 @@ router.post('/', checkSignIn, async function(req, res, next) {
 // gets zip file of sketch with provided sketchID
 router.get('/', async function(req, res, next){
   const { sketchID } = req.query;
+  if (!sketchID) {
+    res.sendStatus(500);
+    return;
+  }
   const sketch = await prisma.sketch.findUnique({where: { id: Number(sketchID) }});
 
   res.attachment(`${sketch.title}.zip`);
@@ -67,12 +71,28 @@ router.get('/current', async function(req, res, next){
 });
 
 // Select
-router.post('/select', async function(req, res, next) {
+router.post('/select', checkIsAdmin, async function(req, res, next) {
   await prisma.selectedSketch.create({data:{sketchId: parseInt(req.body.sketchId) || -1}});
   res.redirect('/dashboard');
 });
 
-// key user for grabing file from s3
+// changes the status of a sketch
+router.post('/evaluate', checkIsAdmin, async function(req, res, next) {
+  const { sketchID, status } = req.body;
+  if (!(sketchID || ['APPROVED', 'REJECTED'].includes(status))) {
+    res.sendStatus(500);
+    return;
+  }
+  await prisma.sketch.update({
+    where: {
+      id: parseInt(sketchID)
+    },
+    data: { status }
+  });
+  res.redirect('/dashboard');
+});
+
+// key user for grabbing file from s3
 const sketchKey = (sketch) => `${sketch.title}-${sketch.id}-${ENVIRONMENT}`;
 
 module.exports = router;

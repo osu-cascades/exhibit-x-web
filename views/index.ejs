@@ -1,6 +1,12 @@
 <%- include('header', {admin}); -%>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
-<div class="container px-4">
+<script
+  type="text/javascript"
+  src="https://cdn.jsdelivr.net/npm/p5@1.4.0/lib/p5.min.js"
+></script>
+<script type="text/javascript" src="/background/noise.js"></script>
+<div class="container px-4 transparent">
+  <h1 class="title">Exhibit <i id="x">X</i></h1>
   <h2>What is <%=title%>?</h2>
   <p>
     <%=title%> is a dynamic, digital, art exhibit on the OSU cascades campus.
@@ -17,15 +23,33 @@
     to ensure that they work properly with the <%=title%> setup and adhear to
     OSU's guidelines.
   </p>
-  <h2>Submit a "Sketch"</h2>
+  <h2>Submit a Processing "Sketch"</h2>
   <% if(signedIn) { %>
-  <form action="/sketch" method="post" , enctype="multipart/form-data">
-    <label for="file">Processing Zip File</label>
-    <input id="file" name="file" type="file" accept=".zip" required />
-    <br />
-    <input type="submit" />
+  <form
+    class="row g-3 needs-validation"
+    action="/sketch"
+    method="post"
+    enctype="multipart/form-data"
+  >
+    <div class="col-md-4">
+      <div class="form-outline">
+        <input
+          class="form-control"
+          id="file"
+          name="file"
+          type="file"
+          accept=".zip"
+          required
+        />
+        <div class="invalid-feedback">Must select a processing zip file</div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <input class="btn btn-primary" type="submit" />
+    </div>
   </form>
   <% } else { %>
+  <p>You must sign in with your OSU email to submit a processing sketch.</p>
   <div
     id="g_id_onload"
     data-client_id="<%=oauthClientID%>"
@@ -42,6 +66,7 @@
     data-logo_alignment="left"
   ></div>
   <% } %>
+
   <h2>Helpful Links</h2>
   <ul>
     <li><a href="https://processing.org/">Processing</a></li>
