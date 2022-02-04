@@ -53,9 +53,9 @@ router.get('/my-sketches', checkSignIn, async function(req, res, next){
       userEmail: req.session.user.email
     }
   });
-  console.log(sketches);
   res.render('mySketches', {
     admin: isAdmin(req),
+    signedIn: true,
     sketches
   });
 });
