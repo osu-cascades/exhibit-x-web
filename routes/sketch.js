@@ -87,7 +87,7 @@ router.get('/current', async function(req, res, next){
 // Select
 router.post('/select', checkIsAdmin, async function(req, res, next) {
   await prisma.selectedSketch.create({data:{sketchId: parseInt(req.body.sketchId) || -1}});
-  res.redirect('/dashboard');
+  res.redirect('/admin');
 });
 
 // changes the status of a sketch
@@ -103,7 +103,7 @@ router.post('/evaluate', checkIsAdmin, async function(req, res, next) {
     },
     data: { status }
   });
-  res.redirect('/dashboard');
+  res.redirect('/admin');
 });
 
 // key user for grabbing file from s3

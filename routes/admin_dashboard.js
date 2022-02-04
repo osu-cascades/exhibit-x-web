@@ -20,7 +20,7 @@ router.get('/', checkIsAdmin,  async function(req, res, next) {
   const stale = lastHeartbeat ? moment.duration(moment().diff(lastHeartbeat.receivedAt)).asMinutes() > 2 : true;
   const activeSketchId = lastHeartbeat && lastHeartbeat.activeSketch > 0 ? lastHeartbeat.activeSketch : undefined;
   const requestedSketchId = selectedSketch ? selectedSketch.sketchId : undefined;
-  res.render('dashboard', {
+  res.render('admin_dashboard', {
     sketches: sketches,
     lastHeartbeat: lastHeartbeat ? moment(lastHeartbeat.receivedAt).fromNow() : "Never", 
     stale: stale,

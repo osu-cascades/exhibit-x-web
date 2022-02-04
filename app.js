@@ -8,7 +8,7 @@ const session = require('express-session');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-var dashboardRouter = require('./routes/dashboard');
+var adminDashboardRouter = require('./routes/admin_dashboard');
 var sketchRouter = require('./routes/sketch');
 var exhibitRouter = require('./routes/exhibit');
 var backgroundRouter = require('./routes/backgrounds');
@@ -34,7 +34,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-app.use('/dashboard', dashboardRouter);
+app.use('/admin', adminDashboardRouter);
 app.use('/sketch', sketchRouter);
 app.use('/exhibit', exhibitRouter);
 app.use('/background', backgroundRouter);
