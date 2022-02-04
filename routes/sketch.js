@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 const AWS = require('aws-sdk');
 const { PrismaClient } = require('@prisma/client');
-const { checkSignIn, checkIsAdmin } = require('../utils/auth');
+const { checkSignIn, checkIsAdmin, isAdmin } = require('../utils/auth');
 
 const { ENVIRONMENT } = process.env;
 
@@ -48,7 +48,16 @@ router.get('/', async function(req, res, next){
 
 // the dashboard for a user to view their own sketches
 router.get('/my-sketches', checkSignIn, async function(req, res, next){
-  res.send('my-sketches');
+  const sketches = await prisma.sketch.findMany({
+    where: {
+      userEmail: req.session.user.email
+    }
+  });
+  console.log(sketches);
+  res.render('mySketches', {
+    admin: isAdmin(req),
+    sketches
+  });
 });
 
 // TODO: add controls for exhibit admin to control current sketch

@@ -1,0 +1,26 @@
+<%- include('header', { admin }); -%>
+
+<div class="container">
+  <div class="card p-2 m-2 shadow-sm">
+    <h3>Sketches</h3>
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Id</th>
+          <th scope="col">Title</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% sketches.forEach(function(sketch) { %>
+          <th scope="row"><%= sketch.id %></th>
+          <td><a href="/sketch?sketchID=<%= sketch.id %>" ><%= sketch.title %></a></td>
+            </form>
+          </td>
+        </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<%- include('footer'); -%>
