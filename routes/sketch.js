@@ -46,6 +46,11 @@ router.get('/', async function(req, res, next){
   fileStream.pipe(res);
 });
 
+// the dashboard for a user to view their own sketches
+router.get('/my-sketches', checkSignIn, async function(req, res, next){
+  res.send('my-sketches');
+});
+
 // TODO: add controls for exhibit admin to control current sketch
 // for now returns info for the most recently uploaded sketch
 router.get('/current', async function(req, res, next){
