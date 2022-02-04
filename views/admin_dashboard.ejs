@@ -114,6 +114,7 @@
                 <tr>
                   <th scope="col">Email</th>
                   <th scope="col">Permission Level</th>
+                  <th scope="col">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -121,6 +122,16 @@
                         <tr>
                           <td><%= user.email %></td>
                           <td><%= user.admin ? "Admin" : "Standard" %></td>
+                          <td>
+                            <form action="/users/updateUser" method="post">
+                              <input type="hidden" name="user" value="<%= user.email %>">
+                              <% if( user.admin) { %>
+                                <button name="admin" value="false" class="btn btn-warning">Revoke Admin</button>
+                              <% } else { %>
+                                <button name="admin" value="true" class="btn btn-warning">Give Admin</button>
+                              <% } %>
+                            </form>
+                          </td>
                       </tr>
                   <% }); %> 
               </tbody>
