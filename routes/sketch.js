@@ -54,7 +54,7 @@ router.get('/my-sketches', checkSignIn, async function(req, res, next){
     }
   });
   res.render('mySketches', {
-    admin: isAdmin(req),
+    admin: await isAdmin(req),
     signedIn: true,
     sketches
   });
