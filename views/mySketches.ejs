@@ -17,7 +17,7 @@
             </form>
           </td>
           <td ><%= (new Date(sketch.createdAt)).toLocaleDateString("en-US") %></td>
-          <td class="p-3 mb-2 bg-warning text-dark"><%= sketch.status %></td>
+          <td class="<%= {PENDING: "bg-warning", APPROVED: "bg-success text-white", REJECTED: "bg-danger  text-white" }[sketch.status] %>"><%= sketch.status %></td>
         </tr>
         <% }); %>
       </tbody>
