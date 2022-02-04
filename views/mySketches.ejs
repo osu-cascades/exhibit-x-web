@@ -6,16 +6,16 @@
     <table class="table">
       <thead>
         <tr>
-          <th scope="col">Id</th>
           <th scope="col">Title</th>
+          <th scope="col">Approval Status</th>
         </tr>
       </thead>
       <tbody>
         <% sketches.forEach(function(sketch) { %>
-          <th scope="row"><%= sketch.id %></th>
           <td><a href="/sketch?sketchID=<%= sketch.id %>" ><%= sketch.title %></a></td>
             </form>
           </td>
+          <td class="p-3 mb-2 bg-warning text-dark"><%= sketch.status %></td>
         </tr>
         <% }); %>
       </tbody>
