@@ -38,6 +38,7 @@
                       <th scope="col">Id</th>
                       <th scope="col">Title</th>
                       <th scope="col">User</th>
+                      <th scope="col">Created At</th>
                       <th scope="col">Actions</th>
                     </tr>
                   </thead>
@@ -53,6 +54,7 @@
                               <th scope="row"><%= sketch.id %></th>
                               <td><%= sketch.title %></td>
                               <td><%= sketch.userEmail %></td>
+                              <td ><%= (new Date(sketch.createdAt)).toLocaleDateString("en-US") %></td>
                               <td>
                                 <form action="/sketch/select" method="post">
                                   <% if( sketch.id == activeSketch) { %>
@@ -78,6 +80,7 @@
                       <th scope="col">Id</th>
                       <th scope="col">Title</th>
                       <th scope="col">User</th>
+                      <th scope="col">Created At</th>
                       <th scope="col">Actions</th>
                     </tr>
                   </thead>
@@ -87,6 +90,7 @@
                               <th scope="row"><%= sketch.id %></th>
                               <td><a href="/sketch?sketchID=<%= sketch.id %>" ><%= sketch.title %></a></td>
                               <td><%= sketch.userEmail %></td>
+                              <td ><%= (new Date(sketch.createdAt)).toLocaleDateString("en-US") %></td>
                               <td>
                                 <form action="/sketch/evaluate" method="post">
                                     <input name="sketchID" type="hidden" value="<%= sketch.id %>"></input>

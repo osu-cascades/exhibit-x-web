@@ -2,11 +2,12 @@
 
 <div class="container">
   <div class="card p-2 m-2 shadow-sm">
-    <h3>Sketches</h3>
+    <h3>My Sketches</h3>
     <table class="table">
       <thead>
         <tr>
           <th scope="col">Title</th>
+          <th scope="col">Created At</th>
           <th scope="col">Approval Status</th>
         </tr>
       </thead>
@@ -15,6 +16,7 @@
           <td><a href="/sketch?sketchID=<%= sketch.id %>" ><%= sketch.title %></a></td>
             </form>
           </td>
+          <td ><%= (new Date(sketch.createdAt)).toLocaleDateString("en-US") %></td>
           <td class="p-3 mb-2 bg-warning text-dark"><%= sketch.status %></td>
         </tr>
         <% }); %>
