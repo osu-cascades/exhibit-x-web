@@ -17,6 +17,8 @@ router.get('/', checkIsAdmin,  async function(req, res, next) {
 
   const users = await prisma.user.findMany();
 
+  const schedules = await prisma.sketchSchedule.findMany();
+
   const stale = lastHeartbeat ? moment.duration(moment().diff(lastHeartbeat.receivedAt)).asMinutes() > 2 : true;
   const activeSketchId = lastHeartbeat && lastHeartbeat.activeSketch > 0 ? lastHeartbeat.activeSketch : undefined;
   const requestedSketchId = selectedSketch ? selectedSketch.sketchId : undefined;
@@ -27,7 +29,8 @@ router.get('/', checkIsAdmin,  async function(req, res, next) {
     activeSketch: activeSketchId,
     activeRow: activeSketchId != undefined && activeSketchId == requestedSketchId ? activeSketchId : undefined,       //TODO: Clean up this stuff
     pendingRow: requestedSketchId != undefined && activeSketchId != requestedSketchId ? requestedSketchId : undefined,
-    users: users
+    users: users,
+    schedules: schedules,
   });
 });
 

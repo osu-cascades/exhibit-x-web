@@ -12,6 +12,7 @@ var adminDashboardRouter = require('./routes/admin_dashboard');
 var sketchRouter = require('./routes/sketch');
 var exhibitRouter = require('./routes/exhibit');
 var backgroundRouter = require('./routes/backgrounds');
+var scheduleRouter = require('./routes/schedule');
 
 const prisma = require('./prisma');
 
@@ -38,6 +39,7 @@ app.use('/admin', adminDashboardRouter);
 app.use('/sketch', sketchRouter);
 app.use('/exhibit', exhibitRouter);
 app.use('/background', backgroundRouter);
+app.use('/schedule', scheduleRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

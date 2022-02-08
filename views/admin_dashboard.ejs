@@ -48,6 +48,15 @@
                   </tr>
                 </thead>
                 <tbody>
+                  <% schedules.forEach(function(schedule) { %>
+                    <tr>
+                      <td><%= schedule.id %></td>
+                      <td><%= schedule.title %></td>
+                      <td>
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#scheduleModal">Edit</button>
+                      </td>
+                    </tr>
+                  <% }); %>
 
                 </tbody>
               </table>
@@ -153,6 +162,12 @@
 
         </div>
       </div>
+    </div>
+
+    <div>
+      <p>
+        <%= JSON.stringify(schedules) %>
+      </p>
     </div>
 
     <!-- Modal Content -->
