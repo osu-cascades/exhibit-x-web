@@ -9,6 +9,7 @@
           <th scope="col">Title</th>
           <th scope="col">Created At</th>
           <th scope="col">Approval Status</th>
+          <th scope="col">Rejection Reason</th>
         </tr>
       </thead>
       <tbody>
@@ -18,6 +19,7 @@
           </td>
           <td ><%= (new Date(sketch.createdAt)).toLocaleDateString("en-US") %></td>
           <td class="<%= {PENDING: "bg-warning", APPROVED: "bg-success text-white", REJECTED: "bg-danger  text-white" }[sketch.status] %>"><%= sketch.status %></td>
+          <td><%= sketch.rejectionReason %></td>
         </tr>
         <% }); %>
       </tbody>
