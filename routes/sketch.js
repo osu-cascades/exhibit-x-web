@@ -2,6 +2,8 @@ var express = require('express');
 var router = express.Router();
 const AWS = require('aws-sdk');
 const { PrismaClient } = require('@prisma/client');
+const ejs = require("ejs");
+
 const { checkSignIn, checkIsAdmin, isAdmin } = require('../utils/auth');
 const { createTransporter } = require('../utils/email');
 
@@ -29,20 +31,14 @@ router.post('/', checkSignIn, async function(req, res, next) {
       res.sendStatus(400);
     } else {
       const emailTransport = await createTransporter();
+      const html = await ejs.renderFile("./emailTemplates/submit.ejs", { title });
       const mailOptions = {
         from: EMAIL_USER,
         to: email,
-        subject: 'Test',
-        text: 'test test test',
+        subject: `Your Sketch ${title} has been submitted`,
+        html
       };
-      console.log(mailOptions);
-      emailTransport.sendMail(mailOptions, function(err, data) {
-        if (err) {
-          console.log("Error: " + err);
-        } else {
-          console.log("Email sent successfully");
-        }
-      });
+      await emailTransport.sendMail(mailOptions);
       res.redirect('/?event=upload_successful');
     }
   });
