@@ -98,10 +98,10 @@ router.post('/select', checkIsAdmin, async function(req, res, next) {
   res.redirect('/admin');
 });
 
-// changes the status of a sketch
-router.post('/evaluate', checkIsAdmin, async function(req, res, next) {
-  const { sketchID, status, rejectionReason } = req.body;
-  if (!(sketchID || ['APPROVED', 'REJECTED'].includes(status))) {
+// approves a sketch
+router.post('/approve', checkIsAdmin, async function(req, res, next) {
+  const { sketchID } = req.body;
+  if (!(sketchID)) {
     res.sendStatus(500);
     return;
   }
@@ -109,12 +109,33 @@ router.post('/evaluate', checkIsAdmin, async function(req, res, next) {
     where: {
       id: parseInt(sketchID)
     },
-    data: { status }
+    data: { status: 'APPROVED' }
   });
   await sendEmail({
     to: userEmail,
-    subject: `Your Sketch ${title} has been ${status.toLowerCase()}`,
-    html: await ejs.renderFile(`./emailTemplates/${status === 'APPROVED' ? 'approve.ejs' : 'reject.ejs'}`, { title, rejectionReason })
+    subject: `Your Sketch ${title} has been approved 🥳`,
+    html: await ejs.renderFile('./emailTemplates/approve.ejs', { title })
+  });
+  res.redirect('/admin');
+});
+
+// rejects a sketch
+router.post('/reject', checkIsAdmin, async function(req, res, next) {
+  const { sketchID, rejectionReason } = req.body;
+  if (!(sketchID)) {
+    res.sendStatus(500);
+    return;
+  }
+  const { title, userEmail } = await prisma.sketch.update({
+    where: {
+      id: parseInt(sketchID)
+    },
+    data: { status: 'REJECTED' }
+  });
+  await sendEmail({
+    to: userEmail,
+    subject: `Your Sketch ${title} has been rejected`,
+    html: await ejs.renderFile('./emailTemplates/reject.ejs', { title, rejectionReason })
   });
   res.redirect('/admin');
 });
