@@ -150,19 +150,26 @@
           'Content-Type': 'application/json'
       }
     };
-    fetch('/sketch/approve', options);
+    fetch('/sketch/approve', options).then(_ => {
+      window.location.href = window.location.href;
+    });
   }
 
   function reject(sketchID) {
-    document.getElementById(`unapproved-${sketchID}`).remove();
-    const options = {
-      method: 'POST',
-      body: JSON.stringify({sketchID}),
-      headers: {
-          'Content-Type': 'application/json'
-      }
-    };
-    fetch('/sketch/reject', options);
+    const rejectionReason = prompt('Reason for rejecting this sketch:');
+    if(rejectionReason !== null) {
+      document.getElementById(`unapproved-${sketchID}`).remove();
+      const options = {
+        method: 'POST',
+        body: JSON.stringify({sketchID, rejectionReason}),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+      };
+      fetch('/sketch/reject', options).then(_ => {
+        window.location.href = window.location.href;
+      });
+    }
   }
 </script>
 
