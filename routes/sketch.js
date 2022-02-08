@@ -130,7 +130,7 @@ router.post('/reject', checkIsAdmin, async function(req, res, next) {
     where: {
       id: parseInt(sketchID)
     },
-    data: { status: 'REJECTED' }
+    data: { status: 'REJECTED', rejectionReason }
   });
   await sendEmail({
     to: userEmail,
