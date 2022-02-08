@@ -14,4 +14,9 @@ const createTransporter = async () => {
   return transporter;
 };
 
-module.exports = { createTransporter };
+const sendEmail = async (options) => {
+  const emailTransport = await createTransporter();
+  await emailTransport.sendMail({ from: EMAIL_USER, ...options });
+}
+
+module.exports = { sendEmail };

@@ -5,7 +5,7 @@ const { PrismaClient } = require('@prisma/client');
 const ejs = require("ejs");
 
 const { checkSignIn, checkIsAdmin, isAdmin } = require('../utils/auth');
-const { createTransporter } = require('../utils/email');
+const { sendEmail } = require('../utils/email');
 
 const { ENVIRONMENT, EMAIL_USER } = process.env;
 
@@ -30,15 +30,11 @@ router.post('/', checkSignIn, async function(req, res, next) {
       console.log(err, err.stack);
       res.sendStatus(400);
     } else {
-      const emailTransport = await createTransporter();
-      const html = await ejs.renderFile("./emailTemplates/submit.ejs", { title });
-      const mailOptions = {
-        from: EMAIL_USER,
+      await sendEmail({
         to: email,
         subject: `Your Sketch ${title} has been submitted`,
-        html
-      };
-      await emailTransport.sendMail(mailOptions);
+        html: await ejs.renderFile("./emailTemplates/submit.ejs", { title })
+      });
       res.redirect('/?event=upload_successful');
     }
   });
@@ -104,16 +100,21 @@ router.post('/select', checkIsAdmin, async function(req, res, next) {
 
 // changes the status of a sketch
 router.post('/evaluate', checkIsAdmin, async function(req, res, next) {
-  const { sketchID, status } = req.body;
+  const { sketchID, status, rejectionReason } = req.body;
   if (!(sketchID || ['APPROVED', 'REJECTED'].includes(status))) {
     res.sendStatus(500);
     return;
   }
-  await prisma.sketch.update({
+  const { title, userEmail } = await prisma.sketch.update({
     where: {
       id: parseInt(sketchID)
     },
     data: { status }
+  });
+  await sendEmail({
+    to: userEmail,
+    subject: `Your Sketch ${title} has been ${status.toLowerCase()}`,
+    html: await ejs.renderFile(`./emailTemplates/${status === 'APPROVED' ? 'approve.ejs' : 'reject.ejs'}`, { title, rejectionReason })
   });
   res.redirect('/admin');
 });
