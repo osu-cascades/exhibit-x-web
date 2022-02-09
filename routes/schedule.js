@@ -22,4 +22,12 @@ router.get("/edit", checkIsAdmin, async function(req, res, next) {
     });
 });
 
+router.post('/select', checkIsAdmin, async function(req, res, next) {
+    await prisma.selectedDisplay.create({data:{
+      displayId: parseInt(req.body.scheduleId) || -1,
+      type: "staticRotation"
+    }});
+    res.redirect('/admin');
+  });
+
 module.exports = router;
