@@ -62,7 +62,10 @@ router.get('/my-sketches', checkSignIn, async function(req, res, next){
 
 // Select
 router.post('/select', checkIsAdmin, async function(req, res, next) {
-  await prisma.selectedSketch.create({data:{sketchId: parseInt(req.body.sketchId) || -1}});
+  await prisma.selectedDisplay.create({data:{
+    displayId: parseInt(req.body.sketchId) || -1,
+    type: "singleSketch"
+  }});
   res.redirect('/admin');
 });
 
