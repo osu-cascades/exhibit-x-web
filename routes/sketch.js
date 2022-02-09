@@ -60,28 +60,6 @@ router.get('/my-sketches', checkSignIn, async function(req, res, next){
   });
 });
 
-router.get('/current', async function(req, res, next){
-
-  const selectedSketch = await prisma.selectedSketch.findFirst({
-    orderBy: { createdAt: "desc"}
-  });
-  const requestedSketchId = selectedSketch ? selectedSketch.sketchId : undefined;
-
-  if(!requestedSketchId) {
-    res.sendStatus(500);
-    return;
-  }
-
-  const { id, title } = await prisma.sketch.findUnique({
-    where: { id: requestedSketchId}
-  });
-  res.send({
-    sketchID: id,
-    downloadURL: `https://${req.get('host')}/sketch?sketchID=${id}`,
-    title: title
-  });
-});
-
 // Select
 router.post('/select', checkIsAdmin, async function(req, res, next) {
   await prisma.selectedSketch.create({data:{sketchId: parseInt(req.body.sketchId) || -1}});
