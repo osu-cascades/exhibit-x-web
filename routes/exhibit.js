@@ -37,7 +37,7 @@ router.get('/current', async function(req, res, next){
     };
 
     res.send({
-        type: selectedDisplay.id,
+        type: selectedDisplay.type,
         payload: payload
     });
   });
