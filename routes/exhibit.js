@@ -9,23 +9,36 @@ router.post('/heartbeat', async function(req, res, next) {
 
 router.get('/current', async function(req, res, next){
 
-    const selectedSketch = await prisma.selectedSketch.findFirst({
+    const selectedDisplay = await prisma.selectedDisplay.findFirst({
       orderBy: { createdAt: "desc"}
     });
-    const requestedSketchId = selectedSketch ? selectedSketch.sketchId : undefined;
-  
-    if(!requestedSketchId) {
-      res.sendStatus(500);
-      return;
+
+    if(!selectedDisplay) {
+        res.sendStatus(500);
+        return;
     }
-  
-    const { id, title } = await prisma.sketch.findUnique({
-      where: { id: requestedSketchId}
-    });
+
+    var payload = {};
+    switch (selectedDisplay.type) {
+        case "singleSketch":
+            const { id, title } = await prisma.sketch.findUnique({
+                where: { id: selectedDisplay.displayId}
+            });
+            payload = {
+                sketchID: id,
+                downloadURL: `https://${req.get('host')}/sketch?sketchID=${id}`,
+                title: title
+            };
+            break;
+        
+        default:
+            res.sendStatus(500);
+            return;
+    };
+
     res.send({
-      sketchID: id,
-      downloadURL: `https://${req.get('host')}/sketch?sketchID=${id}`,
-      title: title
+        type: selectedDisplay.id,
+        payload: payload
     });
   });
 
