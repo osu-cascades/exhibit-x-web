@@ -24,7 +24,6 @@ model Sketch {
   createdAt         DateTime @default(now())
   user              User     @relation(fields: [userEmail], references: [email])
   userEmail         String
-  selectedSketch    SelectedSketch?
 }
 
 model ExhibitHeartbeat {
@@ -43,5 +42,4 @@ model SelectedSketch {
   id           Int       @default(autoincrement()) @id
   createdAt    DateTime  @default(now())
   sketchId     Int
-  sketch       Sketch    @relation(fields: [sketchId], references: [id])
 }
