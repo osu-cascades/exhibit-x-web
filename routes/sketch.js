@@ -68,7 +68,6 @@ router.get('/my-sketches', checkSignIn, async function(req, res, next){
   });
 });
 
-// TODO: add controls for exhibit admin to control current sketch
 // for now returns info for the most recently uploaded sketch
 router.get('/current', async function(req, res, next){
 
@@ -94,7 +93,17 @@ router.get('/current', async function(req, res, next){
 
 // Select
 router.post('/select', checkIsAdmin, async function(req, res, next) {
-  await prisma.selectedSketch.create({data:{sketchId: parseInt(req.body.sketchId) || -1}});
+  const { sketchId } = await prisma.selectedSketch.create({
+    data: { sketchId: parseInt(req.body.sketchId) || -1 },
+  });
+  const { title, userEmail } = await prisma.sketch.findUnique({
+    where: { id: sketchId }
+  });
+  await sendEmail({
+    to: userEmail,
+    subject: `Your Sketch, ${title}, is currently being displayed! 🙀`,
+    html: await ejs.renderFile('./emailTemplates/selected.ejs', { title })
+  });
   res.redirect('/admin');
 });
 
