@@ -86,17 +86,14 @@
                   </thead>
                   <tbody>
                       <% sketches.filter((sketch) => sketch.status === 'PENDING').forEach(function(sketch) { %>
-                            <tr>
+                            <tr id="unapproved-<%= sketch.id %>" >
                               <th scope="row"><%= sketch.id %></th>
                               <td><a href="/sketch?sketchID=<%= sketch.id %>" ><%= sketch.title %></a></td>
                               <td><%= sketch.userEmail %></td>
                               <td ><%= (new Date(sketch.createdAt)).toLocaleDateString("en-US") %></td>
                               <td>
-                                <form action="/sketch/evaluate" method="post">
-                                    <input name="sketchID" type="hidden" value="<%= sketch.id %>"></input>
-                                    <button name="status" value="APPROVED" class="btn btn-success">Approve</button>
-                                    <button name="status" value="REJECTED" class="btn btn-danger">Reject</button>
-                                </form>
+                                <button name="status" onclick="approve('<%= sketch.id %>')" class="btn btn-success">Approve</button>
+                                <button name="status" onclick="reject('<%= sketch.id %>')" class="btn btn-danger">Reject</button>
                               </td>
                           </tr>
                       <% }); %>
@@ -142,5 +139,38 @@
         </div>
   </div>
 </div>
+
+<script>
+  function approve(sketchID) {
+    document.getElementById(`unapproved-${sketchID}`).remove();
+    const options = {
+      method: 'POST',
+      body: JSON.stringify({sketchID}),
+      headers: {
+          'Content-Type': 'application/json'
+      }
+    };
+    fetch('/sketch/approve', options).then(_ => {
+      window.location.href = window.location.href;
+    });
+  }
+
+  function reject(sketchID) {
+    const rejectionReason = prompt('Reason for rejecting this sketch:');
+    if(rejectionReason !== null) {
+      document.getElementById(`unapproved-${sketchID}`).remove();
+      const options = {
+        method: 'POST',
+        body: JSON.stringify({sketchID, rejectionReason}),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+      };
+      fetch('/sketch/reject', options).then(_ => {
+        window.location.href = window.location.href;
+      });
+    }
+  }
+</script>
 
 <%- include('footer'); -%>

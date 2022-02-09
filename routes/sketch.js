@@ -2,9 +2,12 @@ var express = require('express');
 var router = express.Router();
 const AWS = require('aws-sdk');
 const { PrismaClient } = require('@prisma/client');
-const { checkSignIn, checkIsAdmin, isAdmin } = require('../utils/auth');
+const ejs = require("ejs");
 
-const { ENVIRONMENT } = process.env;
+const { checkSignIn, checkIsAdmin, isAdmin } = require('../utils/auth');
+const { sendEmail } = require('../utils/email');
+
+const { ENVIRONMENT, EMAIL_USER } = process.env;
 
 const prisma = new PrismaClient();
 const s3 = new AWS.S3();
@@ -27,6 +30,11 @@ router.post('/', checkSignIn, async function(req, res, next) {
       console.log(err, err.stack);
       res.sendStatus(400);
     } else {
+      await sendEmail({
+        to: email,
+        subject: `Your Sketch ${title} has been submitted`,
+        html: await ejs.renderFile("./emailTemplates/submit.ejs", { title })
+      });
       res.redirect('/?event=upload_successful');
     }
   });
@@ -60,7 +68,6 @@ router.get('/my-sketches', checkSignIn, async function(req, res, next){
   });
 });
 
-// TODO: add controls for exhibit admin to control current sketch
 // for now returns info for the most recently uploaded sketch
 router.get('/current', async function(req, res, next){
 
@@ -86,22 +93,58 @@ router.get('/current', async function(req, res, next){
 
 // Select
 router.post('/select', checkIsAdmin, async function(req, res, next) {
-  await prisma.selectedSketch.create({data:{sketchId: parseInt(req.body.sketchId) || -1}});
+  const { sketchId } = await prisma.selectedSketch.create({
+    data: { sketchId: parseInt(req.body.sketchId) || -1 },
+  });
+  const { title, userEmail } = await prisma.sketch.findUnique({
+    where: { id: sketchId }
+  });
+  await sendEmail({
+    to: userEmail,
+    subject: `Your Sketch, ${title}, is currently being displayed! 🙀`,
+    html: await ejs.renderFile('./emailTemplates/selected.ejs', { title })
+  });
   res.redirect('/admin');
 });
 
-// changes the status of a sketch
-router.post('/evaluate', checkIsAdmin, async function(req, res, next) {
-  const { sketchID, status } = req.body;
-  if (!(sketchID || ['APPROVED', 'REJECTED'].includes(status))) {
+// approves a sketch
+router.post('/approve', checkIsAdmin, async function(req, res, next) {
+  const { sketchID } = req.body;
+  if (!(sketchID)) {
     res.sendStatus(500);
     return;
   }
-  await prisma.sketch.update({
+  const { title, userEmail } = await prisma.sketch.update({
     where: {
       id: parseInt(sketchID)
     },
-    data: { status }
+    data: { status: 'APPROVED' }
+  });
+  await sendEmail({
+    to: userEmail,
+    subject: `Your Sketch ${title} has been approved 🥳`,
+    html: await ejs.renderFile('./emailTemplates/approve.ejs', { title })
+  });
+  res.redirect('/admin');
+});
+
+// rejects a sketch
+router.post('/reject', checkIsAdmin, async function(req, res, next) {
+  const { sketchID, rejectionReason } = req.body;
+  if (!(sketchID)) {
+    res.sendStatus(500);
+    return;
+  }
+  const { title, userEmail } = await prisma.sketch.update({
+    where: {
+      id: parseInt(sketchID)
+    },
+    data: { status: 'REJECTED', rejectionReason }
+  });
+  await sendEmail({
+    to: userEmail,
+    subject: `Your Sketch ${title} has been rejected`,
+    html: await ejs.renderFile('./emailTemplates/reject.ejs', { title, rejectionReason })
   });
   res.redirect('/admin');
 });
