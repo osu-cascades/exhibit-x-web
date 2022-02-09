@@ -46,6 +46,7 @@ router.get('/current', async function(req, res, next){
                 }
             });
             payload = {
+                id: schedule.id,
                 title: schedule.title,
                 periodSeconds: schedule.periodSeconds,
                 sketches: schedule.SketchesOnSchedules.map(schedule => {
