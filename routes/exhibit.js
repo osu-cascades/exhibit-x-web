@@ -30,6 +30,34 @@ router.get('/current', async function(req, res, next){
                 title: title
             };
             break;
+
+        case "staticRotation":
+            const schedule = await prisma.sketchSchedule.findUnique({
+                where: {
+                    id: selectedDisplay.displayId
+                },
+                include: {
+                    SketchesOnSchedules: {
+                    include: {
+                        sketch: true
+                    },
+                    orderBy: {order: "asc"}
+                    }
+                }
+            });
+            payload = {
+                title: schedule.title,
+                periodSeconds: schedule.periodSeconds,
+                sketches: schedule.SketchesOnSchedules.map(schedule => {
+                    const {id, title} = schedule.sketch;
+                    return {
+                        SketchID: id,
+                        downloadURL: `https://${req.get('host')}/sketch?sketchID=${id}`,
+                        title: title,
+                    };
+                })
+            };
+            break;
         
         default:
             res.sendStatus(500);
