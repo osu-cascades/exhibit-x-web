@@ -1,3 +1,31 @@
 <%- include('header', { admin }); -%>
-<h1>hello world</h1>
+    <div class="container">
+        <h2>
+            <%= schedule ? "Editing " + schedule.title : "Create New Schedule" %>
+        </h2>
+        <form>
+            <div class="mp-3">
+                <label for="formScheduleTitle" class="form-label">Name</label>
+                <input type="text" class="form-control" id="formScheduleTitle" value="<%= schedule ? schedule.title : "" %>">
+            </div>
+
+            <div class="mp-3">
+                <label class="form-label">Sketches</label>
+                <% schedule?.SketchesOnSchedules.forEach(function(sketchOnSchedule) { %>
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="<%= sketchOnSchedule.sketch.title%>" readonly>
+                        <button class="btn btn-outline-secondary" type="button">Up</button>
+                        <button class="btn btn-outline-secondary" type="button">Down</button>
+                        <button class="btn btn-outline-danger" type="button">Remove</button>
+                    </div>
+                <% }); %>
+            </div>
+
+            <span class="mp-3">
+                <button class="btn btn-primary" form type="submit">Submit</button>
+                <a class="btn btn-danger" href="/admin">Cancel</a>
+            </span>
+            
+        </form>
+    </div>
 <%- include('footer'); -%>

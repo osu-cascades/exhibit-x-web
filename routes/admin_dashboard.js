@@ -17,7 +17,15 @@ router.get('/', checkIsAdmin,  async function(req, res, next) {
 
   const users = await prisma.user.findMany();
 
-  const schedules = await prisma.sketchSchedule.findMany();
+  const schedules = await prisma.sketchSchedule.findMany({
+    include: {
+      SketchesOnSchedules: {
+        include: {
+          sketch: true
+        }
+      }
+    }
+  });
 
   const stale = lastHeartbeat ? moment.duration(moment().diff(lastHeartbeat.receivedAt)).asMinutes() > 2 : true;
   const activeSketchId = lastHeartbeat && lastHeartbeat.activeSketch > 0 ? lastHeartbeat.activeSketch : undefined;
