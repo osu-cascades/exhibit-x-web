@@ -13,8 +13,6 @@
               <h3 class="mt-0">Exhibit Status</h3>
               <p>
                 Last heard from: <%= lastHeartbeat %><br>
-                Requested display, type: "<%= runningType %>" id: <%= requestedDisplay %> <br>
-                Current display id: <%= activeSketch || "unknown" %>
               </p>
             </div>
             </div>
@@ -52,7 +50,7 @@
                   <% schedules.forEach(function(schedule) { %>
                     <% if( schedule.id == activeRow && runningType == "staticRotation") { %>
                       <tr class="table-success">
-                    <% } else if(schedule.id == pendingRow && runningType == "staticRotation") { %>
+                    <% } else if(schedule.id == pendingRow && requestedType == "staticRotation") { %>
                       <tr class="table-warning">
                     <% } else { %>
                       <tr>
@@ -62,9 +60,9 @@
                       <td>
                         <form action="/schedule/select" method="post">
                             <a class="btn btn-primary" href="/schedule/edit?id=<%= schedule.id %>">Edit</a>
-                            <% if( schedule.id == activeSketch && runningType == "staticRotation") { %>
+                            <% if( schedule.id == activeRow && runningType == "staticRotation") { %>
                               <button class="btn btn-primary" disabled>Running</button>
-                            <% } else if(schedule.id == pendingRow && runningType == "staticRotation") { %>
+                            <% } else if(schedule.id == pendingRow && requestedType == "staticRotation") { %>
                               <button class="btn btn-primary" disabled>Pending</button>
                             <% } else { %>
                               <button name="scheduleId" value="<%= schedule.id %>" class="btn btn-primary">Run</button>
@@ -96,7 +94,7 @@
                       <% sketches.filter((sketch) => sketch.status === 'APPROVED').forEach(function(sketch) { %>
                           <% if( sketch.id == activeRow && runningType == "singleSketch") { %>
                             <tr class="table-success">
-                          <% } else if(sketch.id == pendingRow && runningType == "singleSketch") { %>
+                          <% } else if(sketch.id == pendingRow && requestedType == "singleSketch") { %>
                             <tr class="table-warning">
                           <% } else { %>
                             <tr>
@@ -109,7 +107,7 @@
                                 <form action="/sketch/select" method="post">
                                   <% if( sketch.id == activeSketch && runningType == "singleSketch") { %>
                                     <button class="btn btn-primary" disabled>Running</button>
-                                  <% } else if(sketch.id == pendingRow && runningType == "singleSketch") { %>
+                                  <% } else if(sketch.id == pendingRow && requestedType == "singleSketch") { %>
                                     <button class="btn btn-primary" disabled>Pending</button>
                                   <% } else { %>
                                     <button name="sketchId" value="<%= sketch.id %>" class="btn btn-primary">Run</button>

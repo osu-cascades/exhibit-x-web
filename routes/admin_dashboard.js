@@ -28,19 +28,22 @@ router.get('/', checkIsAdmin,  async function(req, res, next) {
   });
 
   const stale = lastHeartbeat ? moment.duration(moment().diff(lastHeartbeat.receivedAt)).asMinutes() > 2 : true;
-  const activeDisplayId = lastHeartbeat && lastHeartbeat.activeSketch > 0 ? lastHeartbeat.activeSketch : undefined;
+  const activeDisplayId = lastHeartbeat && lastHeartbeat.activeDisplayId > 0 ? lastHeartbeat.activeDisplayId : undefined;
   const requestedSketchId = selectedDisplay ? selectedDisplay.displayId : undefined;
+  const activeDisplayType = lastHeartbeat?.activeDisplayType;
+  const requestedDisplayType = selectedDisplay?.type;
   res.render('admin_dashboard', {
     sketches: sketches,
     lastHeartbeat: lastHeartbeat ? moment(lastHeartbeat.receivedAt).fromNow() : "Never", 
     stale: stale,
     activeSketch: activeDisplayId,
     requestedDisplay: requestedSketchId,
-    activeRow: activeDisplayId != undefined && activeDisplayId == requestedSketchId ? activeDisplayId : undefined,       //TODO: Clean up this stuff
-    pendingRow: requestedSketchId != undefined && activeDisplayId != requestedSketchId ? requestedSketchId : undefined,
+    activeRow: activeDisplayId != undefined && activeDisplayId == requestedSketchId && activeDisplayType == requestedDisplayType ? activeDisplayId : undefined,       //TODO: Clean up this stuff
+    pendingRow: requestedSketchId != undefined && activeDisplayId != requestedSketchId || activeDisplayType != requestedDisplayType ? requestedSketchId : undefined,
     users: users,
     schedules: schedules,
-    runningType: selectedDisplay?.type
+    runningType: activeDisplayType,
+    requestedType: requestedDisplayType
   });
 });
 

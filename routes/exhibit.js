@@ -3,7 +3,10 @@ var router = express.Router();
 const prisma = require('../prisma');
 
 router.post('/heartbeat', async function(req, res, next) {
-    await prisma.exhibitHeartbeat.create({data:{activeSketch: parseInt(req.body.activeSketch) || -1}});
+    await prisma.exhibitHeartbeat.create({data:{
+        activeDisplayId: parseInt(req.body.activeDisplayId) || -1,
+        activeDisplayType: req.body.activeDisplayType || "",
+    }});
     res.sendStatus(200);
 });
 
