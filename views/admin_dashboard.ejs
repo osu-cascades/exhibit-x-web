@@ -93,11 +93,11 @@
                   <tbody>
                       <% sketches.filter((sketch) => sketch.status === 'APPROVED').forEach(function(sketch) { %>
                           <% if( sketch.id == activeRow && runningType == "singleSketch") { %>
-                            <tr class="table-success">
+                            <tr class="table-success"  id="sketch-<%= sketch.id %>">
                           <% } else if(sketch.id == pendingRow && requestedType == "singleSketch") { %>
-                            <tr class="table-warning">
+                            <tr class="table-warning"  id="sketch-<%= sketch.id %>">
                           <% } else { %>
-                            <tr>
+                            <tr  id="sketch-<%= sketch.id %>">
                           <% } %>
                               <th scope="row"><%= sketch.id %></th>
                               <td><%= sketch.title %></td>
@@ -112,7 +112,9 @@
                                   <% } else { %>
                                     <button name="sketchId" value="<%= sketch.id %>" class="btn btn-primary">Run</button>
                                   <% } %>
+                                <button name="status" type="button" onclick="reject('<%= sketch.id %>')" class="btn btn-danger">Reject</button>
                               </form>
+
                               </td>
                           </tr>
                       <% }); %>
@@ -134,7 +136,7 @@
                   </thead>
                   <tbody>
                       <% sketches.filter((sketch) => sketch.status === 'PENDING').forEach(function(sketch) { %>
-                            <tr id="unapproved-<%= sketch.id %>" >
+                            <tr id="sketch-<%= sketch.id %>" >
                               <th scope="row"><%= sketch.id %></th>
                               <td><a href="/sketch?sketchID=<%= sketch.id %>" ><%= sketch.title %></a></td>
                               <td><%= sketch.userEmail %></td>
@@ -190,7 +192,7 @@
 
 <script>
   function approve(sketchID) {
-    document.getElementById(`unapproved-${sketchID}`).remove();
+    document.getElementById(`sketch-${sketchID}`).remove();
     const options = {
       method: 'POST',
       body: JSON.stringify({sketchID}),
@@ -206,7 +208,7 @@
   function reject(sketchID) {
     const rejectionReason = prompt('Reason for rejecting this sketch:');
     if(rejectionReason !== null) {
-      document.getElementById(`unapproved-${sketchID}`).remove();
+      document.getElementById(`sketch-${sketchID}`).remove();
       const options = {
         method: 'POST',
         body: JSON.stringify({sketchID, rejectionReason}),
