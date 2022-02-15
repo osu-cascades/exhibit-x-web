@@ -16,6 +16,9 @@ router.get("/edit", checkIsAdmin, async function(req, res, next) {
             }
         }
     });
+    var sketches = await prisma.sketch.findMany();
+    sketches.filter(sketch => sketch.status === 'APPROVED');
+
     if (schedule) {
         schedule.sketches = schedule.SketchesOnSchedules?.map(sos => {
             return sos.sketch;
@@ -25,7 +28,8 @@ router.get("/edit", checkIsAdmin, async function(req, res, next) {
     res.render('edit_schedule', {
         admin: isAdmin(req),
         signedIn: isSignedIn(req),
-        schedule: JSON.stringify(schedule)
+        schedule: JSON.stringify(schedule),
+        sketches: JSON.stringify(sketches),
     });
 });
 

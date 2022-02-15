@@ -6,15 +6,34 @@
                 periodSeconds: 60,
                 sketches: []
             };
-    
-            console.log(schedule);
-    
+
+            var approvedSketches = JSON.parse(`<%- sketches %>`);
+        
             if (schedule.title != "") {
                 $("#editingTitle").html(`Editing ${schedule.title}`);
                 $("#formScheduleTitle").val(schedule.title);
             }
 
             $("#formSchedulePeriod").val(schedule.periodSeconds);
+
+
+
+            for (const sketchIndex in approvedSketches) {
+                var addButton = $("<button />", {
+                    text: "Add",
+                    class: "btn btn-success",
+                    click: () => {
+                        console.log("Pushing");
+                        schedule.sketches.push(approvedSketches[sketchIndex]);
+                        redrawSketchList(schedule.sketches, $("#sketchesTarget"));
+                        $("#sketchModal").modal('hide');
+                    }
+                });
+                $("#sketchModalBody").append($(`
+                    <div class="input-group mt-1"> \
+                        <input type="text" class="form-control" value="${approvedSketches[sketchIndex].title}" readonly> \
+                    </div>`).append(addButton));
+            }
 
 
             const redrawSketchList = (sketches, target) => {
@@ -25,11 +44,9 @@
                 } else {
                     for (const sketchIndex in sketches) {
                         const sketch = sketches[sketchIndex];
-                        const button = $("<button />", {
+                        const removeButton = $("<button />", {
                             text: "Remove",
                             class: "btn btn-danger",
-                            type: "text",
-                            readOnly: true,
                             click: () => {
                                 schedule.sketches.splice(sketchIndex, 1);
                                 redrawSketchList(schedule.sketches, target);
@@ -38,7 +55,7 @@
     
                         const label = $(`<div class="input-group mt-1"> \
                             <input type="text" class="form-control" value="${sketch.title}" readonly> \
-                            </div>`).append(button)
+                            </div>`).append(removeButton)
                         target.append(label);
                     }
                 }
@@ -68,11 +85,30 @@
                 <div id="sketchesTarget"></div>
             </div>
 
+            <button type="button" class="btn btn-success mt-1" data-bs-toggle="modal" data-bs-target="#sketchModal">
+                Add New Sketch
+            </button>
             <div class="mt-3">
                 <button class="btn btn-primary" form type="submit">Submit</button>
                 <a class="btn btn-danger" href="/admin">Cancel</a>
             </div>
             
         </form>
+
+        <!-- Modal -->
+        <div class="modal fade" id="sketchModal" tabindex="-1" aria-labelledby="sketchModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="sketchModalLabel">Approved Sketches</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" id="sketchModalBody"></div>
+                </div>
+            </div>
+        </div>
     </div>
+   
+      
+
 <%- include('footer'); -%>
