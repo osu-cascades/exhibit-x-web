@@ -105,6 +105,7 @@ router.post('/approve', checkIsAdmin, async function(req, res, next) {
     subject: `Your Sketch ${title} has been approved 🥳`,
     html: await ejs.renderFile('./emailTemplates/approve.ejs', { title })
   });
+});
 
 
 // rejects a sketch
