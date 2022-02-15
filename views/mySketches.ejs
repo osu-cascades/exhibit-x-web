@@ -24,7 +24,7 @@
               <button name="sketchID" value="<%= sketch.id %>" class="btn btn-danger">Pull from Exhibit</button>
             </form>
           </td>
-          <td class="<%= {PENDING: "bg-warning", APPROVED: "bg-success text-white", REJECTED: "bg-danger  text-white" }[sketch.status] %>"><%= sketch.status %></td>
+          <td class="<%= {PENDING: "bg-warning", APPROVED: "bg-success text-white", REJECTED: "bg-danger  text-white", PULLED: "bg-secondary text-white" }[sketch.status] %>"><%= sketch.status %></td>
           <td><%= sketch.rejectionReason %></td>
         </tr>
         <% }); %>
