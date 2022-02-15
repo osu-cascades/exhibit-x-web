@@ -1,30 +1,77 @@
 <%- include('header', { admin }); -%>
+    <script>
+        window.onload = () => {
+            var schedule = JSON.parse(`<%- schedule %>`) || {
+                title: "",
+                periodSeconds: 60,
+                sketches: []
+            };
+    
+            console.log(schedule);
+    
+            if (schedule.title != "") {
+                $("#editingTitle").html(`Editing ${schedule.title}`);
+                $("#formScheduleTitle").val(schedule.title);
+            }
+
+            $("#formSchedulePeriod").val(schedule.periodSeconds);
+
+
+            const redrawSketchList = (sketches, target) => {
+                target.empty();
+
+                if (sketches.length == 0) {
+                    target.append($("<h3>This schedule has no sketches :(</h3>"));
+                } else {
+                    for (const sketchIndex in sketches) {
+                        const sketch = sketches[sketchIndex];
+                        const button = $("<button />", {
+                            text: "Remove",
+                            class: "btn btn-danger",
+                            type: "text",
+                            readOnly: true,
+                            click: () => {
+                                schedule.sketches.splice(sketchIndex, 1);
+                                redrawSketchList(schedule.sketches, target);
+                            }
+                        });
+    
+                        const label = $(`<div class="input-group mt-1"> \
+                            <input type="text" class="form-control" value="${sketch.title}" readonly> \
+                            </div>`).append(button)
+                        target.append(label);
+                    }
+                }
+
+            }
+
+            redrawSketchList(schedule.sketches, $("#sketchesTarget"));
+        };
+    </script>
     <div class="container">
-        <h2>
-            <%= schedule ? "Editing " + schedule.title : "Create New Schedule" %>
+        <h2 id="editingTitle">
+            Create New Schedule
         </h2>
         <form>
-            <div class="mp-3">
+            <div class="mt-3">
                 <label for="formScheduleTitle" class="form-label">Name</label>
-                <input type="text" class="form-control" id="formScheduleTitle" value="<%= schedule ? schedule.title : "" %>">
+                <input type="text" class="form-control" id="formScheduleTitle" value="" %>">
             </div>
 
-            <div class="mp-3">
+            <div class="mt-3">
+                <label for="formSchedulePeriod" class="form-label">Period (Seconds)</label>
+                <input type="number" class="form-control" id="formSchedulePeriod" min="1" %>">
+            </div>
+
+            <div class="mt-3">
                 <label class="form-label">Sketches</label>
-                <% schedule?.SketchesOnSchedules.forEach(function(sketchOnSchedule) { %>
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="<%= sketchOnSchedule.sketch.title%>" readonly>
-                        <button class="btn btn-outline-secondary" type="button">Up</button>
-                        <button class="btn btn-outline-secondary" type="button">Down</button>
-                        <button class="btn btn-outline-danger" type="button">Remove</button>
-                    </div>
-                <% }); %>
+                <div id="sketchesTarget"></div>
             </div>
 
-            <span class="mp-3">
+            <div class="mt-3">
                 <button class="btn btn-primary" form type="submit">Submit</button>
                 <a class="btn btn-danger" href="/admin">Cancel</a>
-            </span>
+            </div>
             
         </form>
     </div>

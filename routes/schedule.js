@@ -11,14 +11,21 @@ router.get("/edit", checkIsAdmin, async function(req, res, next) {
             SketchesOnSchedules: {
                 include: {
                     sketch: true
-                }
+                },
+                orderBy: {order: "asc"}
             }
         }
     });
+    if (schedule) {
+        schedule.sketches = schedule.SketchesOnSchedules?.map(sos => {
+            return sos.sketch;
+        });
+    }
+
     res.render('edit_schedule', {
         admin: isAdmin(req),
         signedIn: isSignedIn(req),
-        schedule: schedule
+        schedule: JSON.stringify(schedule)
     });
 });
 
