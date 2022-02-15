@@ -48,4 +48,20 @@ const checkIsAdmin = async (req, res, next) => {
   }
 };
 
-module.exports = { isSignedIn, signIn, checkSignIn, isAdmin, checkIsAdmin };
+const ownsSketch = async (req, res, next) => {
+  const sketchID = req?.body?.sketchID;
+  const email = req?.session?.user?.email;
+  if (!(sketchID && email)) return false;
+  const { userEmail } = await prisma.sketch.findUnique({where: { id: parseInt(sketchID) }});
+  return userEmail === email;
+};
+
+const checkOwnsSketch = async (req, res, next) => {
+  if(await ownsSketch(req)){
+     next();
+  } else {
+     res.sendStatus(401);
+  }
+};
+
+module.exports = { checkOwnsSketch, isSignedIn, signIn, checkSignIn, isAdmin, checkIsAdmin };

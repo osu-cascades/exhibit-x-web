@@ -20,9 +20,8 @@
           </td>
           <td ><%= (new Date(sketch.createdAt)).toLocaleDateString("en-US") %></td>
           <td>
-            <form action="" method="post">
-                <button name="update"  class="btn btn-warning">Update</button>
-                <button name="pull" class="btn btn-danger">Pull from Exhibit</button>
+            <form action="/sketch/pull" method="post">
+              <button name="sketchID" value="<%= sketch.id %>" class="btn btn-danger">Pull from Exhibit</button>
             </form>
           </td>
           <td class="<%= {PENDING: "bg-warning", APPROVED: "bg-success text-white", REJECTED: "bg-danger  text-white" }[sketch.status] %>"><%= sketch.status %></td>
