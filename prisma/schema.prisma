@@ -17,12 +17,13 @@ enum Status {
 }
 
 model Sketch {
-  id                  Int                   @id @default(autoincrement())
-  title               String
-  status              Status                @default(PENDING)
-  createdAt           DateTime              @default(now())
-  user                User                  @relation(fields: [userEmail], references: [email])
-  userEmail           String
+  id                Int      @default(autoincrement()) @id
+  title             String
+  status            Status   @default(PENDING)
+  rejectionReason   String   @default("")
+  createdAt         DateTime @default(now())
+  user              User     @relation(fields: [userEmail], references: [email])
+  userEmail         String
   SketchesOnSchedules SketchesOnSchedules[]
 }
 

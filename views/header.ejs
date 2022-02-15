@@ -13,8 +13,8 @@
     <link href="/stylesheets/style.css" rel="stylesheet" type="text/css" />
   </head>
   <body>
-    <%- include('partial/navbar', {admin}); -%> <% if(typeof success_message !=
-    'undefined' && success_message != "") { %>
+    <%- include('partial/navbar', {admin, signedIn}); -%> <% if(typeof
+    success_message != 'undefined' && success_message != "") { %>
     <div class="alert alert-success alert-dismissible fade show" role="alert">
       <strong>Success!</strong> <%= success_message %>
       <button
