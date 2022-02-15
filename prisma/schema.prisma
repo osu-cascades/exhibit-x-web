@@ -14,6 +14,7 @@ enum Status {
   PENDING
   APPROVED
   REJECTED
+  PULLED
 }
 
 model Sketch {
