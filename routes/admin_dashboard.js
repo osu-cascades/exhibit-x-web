@@ -11,23 +11,39 @@ router.get('/', checkIsAdmin,  async function(req, res, next) {
     orderBy: { receivedAt: "desc"}
   });
 
-  const selectedSketch = await prisma.selectedSketch.findFirst({
+  const selectedDisplay = await prisma.selectedDisplay.findFirst({
     orderBy: { createdAt: "desc"}
   });
 
   const users = await prisma.user.findMany();
 
+  const schedules = await prisma.sketchSchedule.findMany({
+    include: {
+      SketchesOnSchedules: {
+        include: {
+          sketch: true
+        }
+      }
+    }
+  });
+
   const stale = lastHeartbeat ? moment.duration(moment().diff(lastHeartbeat.receivedAt)).asMinutes() > 2 : true;
-  const activeSketchId = lastHeartbeat && lastHeartbeat.activeSketch > 0 ? lastHeartbeat.activeSketch : undefined;
-  const requestedSketchId = selectedSketch ? selectedSketch.sketchId : undefined;
+  const activeDisplayId = lastHeartbeat && lastHeartbeat.activeDisplayId > 0 ? lastHeartbeat.activeDisplayId : undefined;
+  const requestedSketchId = selectedDisplay ? selectedDisplay.displayId : undefined;
+  const activeDisplayType = lastHeartbeat?.activeDisplayType;
+  const requestedDisplayType = selectedDisplay?.type;
   res.render('admin_dashboard', {
     sketches: sketches,
     lastHeartbeat: lastHeartbeat ? moment(lastHeartbeat.receivedAt).fromNow() : "Never", 
     stale: stale,
-    activeSketch: activeSketchId,
-    activeRow: activeSketchId != undefined && activeSketchId == requestedSketchId ? activeSketchId : undefined,       //TODO: Clean up this stuff
-    pendingRow: requestedSketchId != undefined && activeSketchId != requestedSketchId ? requestedSketchId : undefined,
-    users: users
+    activeSketch: activeDisplayId,
+    requestedDisplay: requestedSketchId,
+    activeRow: activeDisplayId != undefined && activeDisplayId == requestedSketchId && activeDisplayType == requestedDisplayType ? activeDisplayId : undefined,       //TODO: Clean up this stuff
+    pendingRow: requestedSketchId != undefined && activeDisplayId != requestedSketchId || activeDisplayType != requestedDisplayType ? requestedSketchId : undefined,
+    users: users,
+    schedules: schedules,
+    runningType: activeDisplayType,
+    requestedType: requestedDisplayType
   });
 });
 
