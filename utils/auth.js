@@ -27,9 +27,9 @@ const isSignedIn = (req) => {
 
 const checkSignIn = (req, res, next) => {
   if(isSignedIn(req)){
-     next();
+    next();
   } else {
-     res.sendStatus(401);
+    res.sendStatus(401);
   }
 };
 
@@ -42,9 +42,9 @@ const isAdmin = async (req) => {
 
 const checkIsAdmin = async (req, res, next) => {
   if(await isAdmin(req)){
-     next();
+    next();
   } else {
-     res.sendStatus(401);
+    res.sendStatus(401);
   }
 };
 
@@ -52,15 +52,19 @@ const ownsSketch = async (req, res, next) => {
   const sketchID = req?.body?.sketchID;
   const email = req?.session?.user?.email;
   if (!(sketchID && email)) return false;
-  const { userEmail } = await prisma.sketch.findUnique({where: { id: parseInt(sketchID) }});
-  return userEmail === email;
+  const sketch = await prisma.sketch.findUnique({where: { id: parseInt(sketchID) }});
+  if (sketch.userEmail === email)
+    return sketch;
+  return false;
 };
 
 const checkOwnsSketch = async (req, res, next) => {
-  if(await ownsSketch(req)){
-     next();
+  const sketch = await ownsSketch(req);
+  if(sketch){
+    req.sketch = sketch;
+    next();
   } else {
-     res.sendStatus(401);
+    res.sendStatus(401);
   }
 };
 

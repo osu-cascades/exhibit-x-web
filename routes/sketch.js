@@ -130,12 +130,27 @@ router.post('/reject', checkIsAdmin, async function(req, res, next) {
 });
 
 router.post('/pull', checkOwnsSketch, async function(req, res, next) {
-  const { sketchID } = req.body;
+  const { id, status } = req.sketch;
+  if (status !== 'APPROVED') {
+    res.sendStatus(401);
+    return;
+  }
   await prisma.sketch.update({
-    where: {
-      id: parseInt(sketchID),
-    },
+    where: { id },
     data: { status: 'PULLED' }
+  });
+  res.redirect('/sketch/my-sketches');
+});
+
+router.post('/put', checkOwnsSketch, async function(req, res, next) {
+  const { id, status } = req.sketch;
+  if (status !== 'PULLED') {
+    res.sendStatus(401);
+    return;
+  }
+  await prisma.sketch.update({
+    where: { id },
+    data: { status: 'APPROVED' }
   });
   res.redirect('/sketch/my-sketches');
 });
