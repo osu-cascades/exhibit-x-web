@@ -16,9 +16,7 @@
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <% if(admin) { %>
         <li class="nav-item">
-          <a class="nav-link" aria-current="page" href="/admin"
-            >Admin Panel</a
-          >
+          <a class="nav-link" aria-current="page" href="/admin">Admin Panel</a>
         </li>
         <% } %> <% if(signedIn) { %>
         <li class="nav-item">
@@ -29,5 +27,20 @@
         <% } %>
       </ul>
     </div>
+    <!-- <div
+      id="g_id_onload"
+      data-client_id="<%=oauthClientID%>"
+      data-login_uri="<%=host%>/users/signIn"
+      data-auto_prompt="false"
+    ></div>
+    <div
+      class="g_id_signin"
+      data-type="standard"
+      data-size="large"
+      data-theme="outline"
+      data-text="sign_in_with"
+      data-shape="rectangular"
+      data-logo_alignment="left"
+    ></div> -->
   </div>
 </nav>

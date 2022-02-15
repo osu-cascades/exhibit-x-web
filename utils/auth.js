@@ -1,7 +1,7 @@
 const { OAuth2Client } = require('google-auth-library');
 const { PrismaClient } = require('@prisma/client');
 
-const { OAUTH_CLIENT_ID } = process.env;
+const { OAUTH_CLIENT_ID, ENVIRONMENT } = process.env;
 
 const prisma = new PrismaClient();
 const oauthClient = new OAuth2Client(OAUTH_CLIENT_ID);
@@ -20,6 +20,17 @@ const signIn = async (token) => {
   }
   return user;
 };
+
+const setLocals = async (req, res, next) => {
+  res.locals = {
+    title: 'Exhbit X',
+    oauthClientID: process.env.OAUTH_CLIENT_ID,
+    host: `${ENVIRONMENT === 'dev' ? 'http' : 'https'}://${req.get('host')}`,
+    signedIn: isSignedIn(req),
+    admin: await isAdmin(req),
+  };
+  next();
+}
 
 const isSignedIn = (req) => {
   return Boolean(req?.session?.user?.email);
@@ -68,4 +79,4 @@ const checkOwnsSketch = async (req, res, next) => {
   }
 };
 
-module.exports = { checkOwnsSketch, isSignedIn, signIn, checkSignIn, isAdmin, checkIsAdmin };
+module.exports = { checkOwnsSketch, isSignedIn, signIn, checkSignIn, isAdmin, checkIsAdmin, setLocals };
