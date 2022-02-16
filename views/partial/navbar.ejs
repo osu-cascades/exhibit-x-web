@@ -1,3 +1,4 @@
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
   <div class="container-fluid">
     <a class="navbar-brand" href="/">Exhibit X</a>
@@ -26,6 +27,21 @@
         </li>
         <% } %>
       </ul>
+      <div
+        id="g_id_onload"
+        data-client_id="<%=oauthClientID%>"
+        data-login_uri="<%=host%>/users/signIn"
+        data-auto_prompt="false"
+      ></div>
+      <div
+        class="g_id_signin"
+        data-type="standard"
+        data-size="large"
+        data-theme="outline"
+        data-text="sign_in_with"
+        data-shape="rectangular"
+        data-logo_alignment="left"
+      ></div>
     </div>
   </div>
 </nav>
