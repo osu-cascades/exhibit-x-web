@@ -58,11 +58,10 @@ model SketchSchedule {
 }
 
 model SketchesOnSchedules {
+  id                  Int                   @id @default(autoincrement())
   schedule   SketchSchedule @relation(fields: [scheduleId], references: [id])
   scheduleId Int
   sketch     Sketch         @relation(fields: [sketchId], references: [id])
   sketchId   Int
   order      Int
-
-  @@id([scheduleId, sketchId])
 }
