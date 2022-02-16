@@ -31,6 +31,50 @@ router.get("/edit", checkIsAdmin, async function(req, res, next) {
     });
 });
 
+router.post('/edit', checkIsAdmin, async function(req, res, next) {
+    const schedule = JSON.parse(req.body.schedulePayload);
+    
+    if (isNaN(parseInt(schedule.periodSeconds))) {
+        res.sendStatus(500);
+        return;
+    }
+
+    const updated_schedule = await prisma.sketchSchedule.upsert({
+        where: {
+            id: parseInt(schedule.id) || -1
+        },
+        update: {
+            title: schedule.title,
+            periodSeconds: parseInt(schedule.periodSeconds)
+        },
+        create: {
+            title: schedule.title,
+            periodSeconds: parseInt(schedule.periodSeconds),
+        }
+    });
+   
+    // TODO: There is probably a way to do this all in one transaction
+
+    //Delete all existing schedule<->sketch links
+    await prisma.sketchesOnSchedules.deleteMany({
+        where: {
+            scheduleId: updated_schedule.id
+        }
+    });
+
+    for (const [index, sketch] of schedule.sketches.entries()) {
+        await prisma.sketchesOnSchedules.create({
+            data: {
+                order: index,
+                scheduleId: updated_schedule.id,
+                sketchId: sketch.id,
+            }
+        });
+    }
+
+    res.sendStatus(200);
+});
+
 router.post('/select', checkIsAdmin, async function(req, res, next) {
     await prisma.selectedDisplay.create({data:{
       displayId: parseInt(req.body.scheduleId) || -1,

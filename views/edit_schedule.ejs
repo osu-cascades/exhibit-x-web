@@ -6,17 +6,24 @@
                 periodSeconds: 60,
                 sketches: []
             };
+            const new_schedule = schedule.id == undefined;
 
             var approvedSketches = JSON.parse(`<%- sketches %>`);
         
-            if (schedule.title != "") {
+            if (!new_schedule) {
                 $("#editingTitle").html(`Editing ${schedule.title}`);
                 $("#formScheduleTitle").val(schedule.title);
             }
 
+            $("#formScheduleTitle").on("change", () => {
+                schedule.title = $("#formScheduleTitle").val()
+            });
+
             $("#formSchedulePeriod").val(schedule.periodSeconds);
 
-
+            $("#formSchedulePeriod").on("change", () => {
+                schedule.periodSeconds = $("#formSchedulePeriod").val();
+            });
 
             for (const sketchIndex in approvedSketches) {
                 var addButton = $("<button />", {
@@ -62,6 +69,18 @@
 
             }
 
+            $("#scheduleSubmitButton").on("click", () => {
+                console.log(schedule);
+
+                $.ajax({
+                    type: "POST",
+                    url: "/schedule/edit",
+                    data: {
+                        schedulePayload: JSON.stringify(schedule)
+                    }
+                });
+            });
+
             redrawSketchList(schedule.sketches, $("#sketchesTarget"));
         };
     </script>
@@ -89,7 +108,7 @@
                 Add New Sketch
             </button>
             <div class="mt-3">
-                <button class="btn btn-primary" form type="submit">Submit</button>
+                <button class="btn btn-primary" form type="button" id="scheduleSubmitButton">Submit</button>
                 <a class="btn btn-danger" href="/admin">Cancel</a>
             </div>
             
