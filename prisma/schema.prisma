@@ -32,7 +32,7 @@ model ExhibitHeartbeat {
   id                Int      @id @default(autoincrement())
   receivedAt        DateTime @default(now())
   activeDisplayId   Int      @default(-1)
-  activeDisplayType String
+  activeDisplayType String   @default("")
 }
 
 model User {
@@ -62,7 +62,6 @@ model SketchesOnSchedules {
   scheduleId Int
   sketch     Sketch         @relation(fields: [sketchId], references: [id])
   sketchId   Int
-  
   order      Int
 
   @@id([scheduleId, sketchId])
