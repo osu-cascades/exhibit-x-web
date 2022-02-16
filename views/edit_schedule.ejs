@@ -77,7 +77,10 @@
                     url: "/schedule/edit",
                     data: {
                         schedulePayload: JSON.stringify(schedule)
-                    }
+                    },
+                    complete: () => {
+                        window.location.href = "/admin";
+                    },
                 });
             });
 
