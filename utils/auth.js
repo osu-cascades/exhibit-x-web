@@ -21,7 +21,7 @@ const signIn = async (token) => {
   return user;
 };
 
-const setLocals = async (req, res, next) => {
+const setLocals = async (req, res) => {
   res.locals = {
     title: 'Exhbit X',
     oauthClientID: process.env.OAUTH_CLIENT_ID,
@@ -29,6 +29,10 @@ const setLocals = async (req, res, next) => {
     signedIn: isSignedIn(req),
     admin: await isAdmin(req),
   };
+}
+
+const getAuthLevel = async (req, res, next) => {
+  await setLocals(req, res);
   next();
 }
 
@@ -36,8 +40,9 @@ const isSignedIn = (req) => {
   return Boolean(req?.session?.user?.email);
 };
 
-const checkSignIn = (req, res, next) => {
-  if(isSignedIn(req)){
+const checkSignIn = async (req, res, next) => {
+  await setLocals(req, res, next);
+  if(res.locals.signedIn){
     next();
   } else {
     res.sendStatus(401);
@@ -79,4 +84,4 @@ const checkOwnsSketch = async (req, res, next) => {
   }
 };
 
-module.exports = { checkOwnsSketch, isSignedIn, signIn, checkSignIn, isAdmin, checkIsAdmin, setLocals };
+module.exports = { checkOwnsSketch, isSignedIn, signIn, checkSignIn, isAdmin, checkIsAdmin, getAuthLevel };

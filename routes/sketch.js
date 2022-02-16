@@ -61,13 +61,8 @@ router.get('/my-sketches', checkSignIn, async function(req, res, next){
       userEmail: req.session.user.email
     }
   });
-  res.render('mySketches', {
-    admin: await isAdmin(req),
-    signedIn: true,
-    sketches
-  });
+  res.render('mySketches', { sketches });
 });
-
 
 // Select
 router.post('/select', checkIsAdmin, async function(req, res, next) {
