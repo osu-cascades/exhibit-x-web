@@ -42,6 +42,14 @@
                     </div>`).append(addButton));
             }
 
+            const formError = (schedule) => {
+                if (schedule === undefined || schedule.title === undefined || schedule.periodSeconds === undefined || schedule.sketches === undefined) return "Internal Error. Please contact an admin.";
+                if (schedule.title === "") return "Schedule name must not be empty!";
+                if (isNaN(parseInt(schedule.periodSeconds)) || parseInt(schedule.periodSeconds) < 1) return "Period must be an integer greater than 0!";
+                if (schedule.sketches.length < 1) return "Schedule must have at least one sketch assigned!";
+                return undefined;
+            }
+
 
             const redrawSketchList = (sketches, target) => {
                 target.empty();
@@ -69,8 +77,16 @@
 
             }
 
+            const showError = text => {
+                $("#errorAlert").html(text);
+                $("#errorAlert").show();
+            }
+
             $("#scheduleSubmitButton").on("click", () => {
-                console.log(schedule);
+                if (formError(schedule)) {
+                    showError(formError(schedule));
+                    return;
+                }
 
                 $.ajax({
                     type: "POST",
@@ -87,7 +103,10 @@
             redrawSketchList(schedule.sketches, $("#sketchesTarget"));
         };
     </script>
-    <div class="container">
+    <div class="container mt-1">
+        <div class="alert alert-danger mt-3" role="alert" id="errorAlert" style="display: none;">
+            A simple danger alert—check it out!
+        </div>
         <h2 id="editingTitle">
             Create New Schedule
         </h2>
