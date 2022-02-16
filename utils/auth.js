@@ -41,7 +41,7 @@ const isSignedIn = (req) => {
 };
 
 const checkSignIn = async (req, res, next) => {
-  await setLocals(req, res, next);
+  await setLocals(req, res);
   if(res.locals.signedIn){
     next();
   } else {
@@ -57,7 +57,8 @@ const isAdmin = async (req) => {
 };
 
 const checkIsAdmin = async (req, res, next) => {
-  if(await isAdmin(req)){
+  await setLocals(req, res);
+  if(res.locals.admin){
     next();
   } else {
     res.sendStatus(401);

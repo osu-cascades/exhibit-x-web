@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-const { signIn, checkIsAdmin, isAdmin, isSignedIn } = require('../utils/auth');
+const { checkIsAdmin } = require('../utils/auth');
 const prisma = require('../prisma');
 
 router.get("/edit", checkIsAdmin, async function(req, res, next) {
@@ -15,11 +15,7 @@ router.get("/edit", checkIsAdmin, async function(req, res, next) {
             }
         }
     });
-    res.render('edit_schedule', {
-        admin: isAdmin(req),
-        signedIn: isSignedIn(req),
-        schedule: schedule
-    });
+    res.render('edit_schedule', { schedule: schedule });
 });
 
 router.post('/select', checkIsAdmin, async function(req, res, next) {
