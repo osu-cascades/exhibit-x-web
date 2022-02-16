@@ -33,8 +33,16 @@ router.get("/edit", checkIsAdmin, async function(req, res, next) {
 
 router.post('/edit', checkIsAdmin, async function(req, res, next) {
     const schedule = JSON.parse(req.body.schedulePayload);
+
+    // TODO: Refactor
+    const validSchedule = schedule => {
+        return schedule !== undefined 
+            && schedule.title !== undefined 
+            && schedule.title !== "" && schedule.periodSeconds !== undefined 
+            &&  !isNaN(parseInt(schedule.periodSeconds));
+    }
     
-    if (isNaN(parseInt(schedule.periodSeconds))) {
+    if (!validSchedule(schedule)) {
         res.sendStatus(500);
         return;
     }
