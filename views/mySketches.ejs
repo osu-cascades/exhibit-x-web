@@ -8,6 +8,7 @@
         <tr>
           <th scope="col">Title</th>
           <th scope="col">Created At</th>
+          <th scope="col">Actions</th>
           <th scope="col">Approval Status</th>
           <th scope="col">Rejection Reason</th>
         </tr>
@@ -18,7 +19,25 @@
             </form>
           </td>
           <td ><%= (new Date(sketch.createdAt)).toLocaleDateString("en-US") %></td>
-          <td class="<%= {PENDING: "bg-warning", APPROVED: "bg-success text-white", REJECTED: "bg-danger  text-white" }[sketch.status] %>"><%= sketch.status %></td>
+          <td>
+            <% if (sketch.status === 'APPROVED') { %>
+            <form action="/sketch/pull" method="post">
+              <button name="sketchID" value="<%= sketch.id %>" class="btn btn-warning">Pull from Exhibit</button>
+            </form>
+            <% } else if (sketch.status === 'PULLED') { %>
+            <form action="/sketch/put" method="post">
+              <button name="sketchID" value="<%= sketch.id %>" class="btn btn-primary">Put Back on Exhibit</button>
+            </form>
+            <% } %>
+          </td>
+          <td class="<%= {
+            PENDING: "bg-warning",
+            APPROVED: "bg-success text-white",
+            REJECTED: "bg-danger  text-white",
+            PULLED: "bg-secondary text-white"
+          }[sketch.status] %>">
+            <%= sketch.status %>
+          </td>
           <td><%= sketch.rejectionReason %></td>
         </tr>
         <% }); %>

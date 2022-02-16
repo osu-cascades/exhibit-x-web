@@ -34,7 +34,7 @@ router.get('/', checkIsAdmin,  async function(req, res, next) {
   const requestedDisplayType = selectedDisplay?.type;
   res.render('admin_dashboard', {
     sketches: sketches,
-    lastHeartbeat: lastHeartbeat ? moment(lastHeartbeat.receivedAt).fromNow() : "Never", 
+    lastHeartbeat: lastHeartbeat ? moment(lastHeartbeat.receivedAt).fromNow() : "Never",
     stale: stale,
     activeSketch: activeDisplayId,
     requestedDisplay: requestedSketchId,

@@ -4,7 +4,7 @@ const AWS = require('aws-sdk');
 const { PrismaClient } = require('@prisma/client');
 const ejs = require("ejs");
 
-const { checkSignIn, checkIsAdmin, isAdmin } = require('../utils/auth');
+const { checkSignIn, checkIsAdmin, isAdmin, checkOwnsSketch } = require('../utils/auth');
 const { sendEmail } = require('../utils/email');
 
 const { ENVIRONMENT, EMAIL_USER } = process.env;
@@ -61,13 +61,8 @@ router.get('/my-sketches', checkSignIn, async function(req, res, next){
       userEmail: req.session.user.email
     }
   });
-  res.render('mySketches', {
-    admin: await isAdmin(req),
-    signedIn: true,
-    sketches
-  });
+  res.render('mySketches', { sketches });
 });
-
 
 // Select
 router.post('/select', checkIsAdmin, async function(req, res, next) {
@@ -75,7 +70,7 @@ router.post('/select', checkIsAdmin, async function(req, res, next) {
     displayId: parseInt(req.body.sketchId) || -1,
     type: "singleSketch"
   }});
-  
+
   const { title, userEmail } = await prisma.sketch.findUnique({
     where: { id: parseInt(req.body.sketchId) }
   });
@@ -105,8 +100,8 @@ router.post('/approve', checkIsAdmin, async function(req, res, next) {
     subject: `Your Sketch ${title} has been approved 🥳`,
     html: await ejs.renderFile('./emailTemplates/approve.ejs', { title })
   });
+  res.redirect('/admin');
 });
-
 
 // rejects a sketch
 router.post('/reject', checkIsAdmin, async function(req, res, next) {
@@ -127,6 +122,32 @@ router.post('/reject', checkIsAdmin, async function(req, res, next) {
     html: await ejs.renderFile('./emailTemplates/reject.ejs', { title, rejectionReason })
   });
   res.redirect('/admin');
+});
+
+router.post('/pull', checkOwnsSketch, async function(req, res, next) {
+  const { id, status } = req.sketch;
+  if (status !== 'APPROVED') {
+    res.sendStatus(401);
+    return;
+  }
+  await prisma.sketch.update({
+    where: { id },
+    data: { status: 'PULLED' }
+  });
+  res.redirect('/sketch/my-sketches');
+});
+
+router.post('/put', checkOwnsSketch, async function(req, res, next) {
+  const { id, status } = req.sketch;
+  if (status !== 'PULLED') {
+    res.sendStatus(401);
+    return;
+  }
+  await prisma.sketch.update({
+    where: { id },
+    data: { status: 'APPROVED' }
+  });
+  res.redirect('/sketch/my-sketches');
 });
 
 // key user for grabbing file from s3
