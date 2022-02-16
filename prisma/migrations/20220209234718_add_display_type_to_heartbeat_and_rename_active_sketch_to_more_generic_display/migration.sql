@@ -8,4 +8,4 @@
 -- AlterTable
 ALTER TABLE "ExhibitHeartbeat" DROP COLUMN "activeSketch",
 ADD COLUMN     "activeDisplayId" INTEGER NOT NULL DEFAULT -1,
-ADD COLUMN     "activeDisplayType" TEXT NOT NULL;
+ADD COLUMN     "activeDisplayType" TEXT DEFAULT '';
