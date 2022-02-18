@@ -1,14 +1,14 @@
-const nodemailer = require("nodemailer");
+const nodemailer = require('nodemailer');
 
-const { EMAIL_USER, EMAIL_PASSWORD } = process.env;
+const {EMAIL_USER, EMAIL_PASSWORD} = process.env;
 
 const createTransporter = async () => {
   const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: EMAIL_USER,
-        pass: EMAIL_PASSWORD
-    }
+      user: EMAIL_USER,
+      pass: EMAIL_PASSWORD,
+    },
   });
 
   return transporter;
@@ -16,7 +16,7 @@ const createTransporter = async () => {
 
 const sendEmail = async (options) => {
   const emailTransport = await createTransporter();
-  await emailTransport.sendMail({ from: EMAIL_USER, ...options });
-}
+  await emailTransport.sendMail({from: EMAIL_USER, ...options});
+};
 
-module.exports = { sendEmail };
+module.exports = {sendEmail};
