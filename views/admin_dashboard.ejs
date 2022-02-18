@@ -100,7 +100,7 @@
                             <tr  id="sketch-<%= sketch.id %>">
                           <% } %>
                               <th scope="row"><%= sketch.id %></th>
-                              <td><%= sketch.title %></td>
+                              <td><a href="/sketch?sketchID=<%= sketch.id %>" ><%= sketch.title %></a></td>
                               <td><%= sketch.userEmail %></td>
                               <td ><%= (new Date(sketch.createdAt)).toLocaleDateString("en-US") %></td>
                               <td>

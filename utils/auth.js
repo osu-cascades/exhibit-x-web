@@ -1,7 +1,7 @@
-const { OAuth2Client } = require('google-auth-library');
-const { PrismaClient } = require('@prisma/client');
+const {OAuth2Client} = require('google-auth-library');
+const {PrismaClient} = require('@prisma/client');
 
-const { OAUTH_CLIENT_ID, ENVIRONMENT } = process.env;
+const {OAUTH_CLIENT_ID, ENVIRONMENT} = process.env;
 
 const prisma = new PrismaClient();
 const oauthClient = new OAuth2Client(OAUTH_CLIENT_ID);
@@ -9,13 +9,13 @@ const oauthClient = new OAuth2Client(OAUTH_CLIENT_ID);
 const signIn = async (token) => {
   const ticket = await oauthClient.verifyIdToken({
     idToken: token,
-    audience: OAUTH_CLIENT_ID
+    audience: OAUTH_CLIENT_ID,
   });
-  const { email } = ticket.getPayload();
-  let user = await prisma.user.findUnique({ where: { email } });
-  if(!user){
+  const {email} = ticket.getPayload();
+  let user = await prisma.user.findUnique({where: {email}});
+  if (!user) {
     user = await prisma.user.create({
-      data: { email }
+      data: {email},
     });
   }
   return user;
@@ -29,12 +29,12 @@ const setLocals = async (req, res) => {
     signedIn: isSignedIn(req),
     admin: await isAdmin(req),
   };
-}
+};
 
 const getAuthLevel = async (req, res, next) => {
   await setLocals(req, res);
   next();
-}
+};
 
 const isSignedIn = (req) => {
   return Boolean(req?.session?.user?.email);
@@ -42,7 +42,7 @@ const isSignedIn = (req) => {
 
 const checkSignIn = async (req, res, next) => {
   await setLocals(req, res);
-  if(res.locals.signedIn){
+  if (res.locals.signedIn) {
     next();
   } else {
     res.sendStatus(401);
@@ -52,13 +52,13 @@ const checkSignIn = async (req, res, next) => {
 const isAdmin = async (req) => {
   const email = req?.session?.user?.email;
   if (!email) return false;
-  const { admin } = await prisma.user.findUnique({where: {email} });
+  const {admin} = await prisma.user.findUnique({where: {email}});
   return admin;
 };
 
 const checkIsAdmin = async (req, res, next) => {
   await setLocals(req, res);
-  if(res.locals.admin){
+  if (res.locals.admin) {
     next();
   } else {
     res.sendStatus(401);
@@ -69,15 +69,18 @@ const ownsSketch = async (req, res, next) => {
   const sketchID = req?.body?.sketchID;
   const email = req?.session?.user?.email;
   if (!(sketchID && email)) return false;
-  const sketch = await prisma.sketch.findUnique({where: { id: parseInt(sketchID) }});
-  if (sketch.userEmail === email)
+  const sketch = await prisma.sketch.findUnique({
+    where: {id: parseInt(sketchID)},
+  });
+  if (sketch.userEmail === email) {
     return sketch;
+  }
   return false;
 };
 
 const checkOwnsSketch = async (req, res, next) => {
   const sketch = await ownsSketch(req);
-  if(sketch){
+  if (sketch) {
     req.sketch = sketch;
     next();
   } else {
@@ -85,4 +88,9 @@ const checkOwnsSketch = async (req, res, next) => {
   }
 };
 
-module.exports = { checkOwnsSketch, isSignedIn, signIn, checkSignIn, isAdmin, checkIsAdmin, getAuthLevel };
+module.exports = {checkOwnsSketch,
+  checkSignIn,
+  checkIsAdmin,
+  getAuthLevel,
+  signIn,
+};
