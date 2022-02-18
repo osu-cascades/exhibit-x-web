@@ -1,12 +1,12 @@
-var express = require('express');
-var router = express.Router();
-const { signIn, checkIsAdmin } = require('../utils/auth')
-const { PrismaClient } = require('@prisma/client');
+const express = require('express');
+const router = new express.Router();
+const {signIn, checkIsAdmin} = require('../utils/auth');
+const {PrismaClient} = require('@prisma/client');
 
 const prisma = new PrismaClient();
 
 router.post('/signIn', async function(req, res, next) {
-  const { credential } = req.body ;
+  const {credential} = req.body;
   req.session.user = await signIn(credential);
   res.redirect('/');
 });
@@ -21,13 +21,13 @@ router.post('/updateUser', checkIsAdmin, async function(req, res, next) {
 
   await prisma.user.update({
     where: {
-      email: user
+      email: user,
     },
     data: {
-      admin: admin === 'true'
-    }
+      admin: admin === 'true',
+    },
   });
   res.redirect('/admin');
-})
+});
 
 module.exports = router;

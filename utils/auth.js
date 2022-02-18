@@ -88,7 +88,8 @@ const checkOwnsSketch = async (req, res, next) => {
   }
 };
 
-module.exports = {checkOwnsSketch,
+module.exports = {
+  checkOwnsSketch,
   checkSignIn,
   checkIsAdmin,
   getAuthLevel,
