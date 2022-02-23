@@ -6,12 +6,18 @@ const {OAUTH_CLIENT_ID, ENVIRONMENT} = process.env;
 const prisma = new PrismaClient();
 const oauthClient = new OAuth2Client(OAUTH_CLIENT_ID);
 
+// potentially add more orgs if we would want high schoolers to submit
+const validEmailOrgs = ['oregonstate.edu'];
+
 const signIn = async (token) => {
   const ticket = await oauthClient.verifyIdToken({
     idToken: token,
     audience: OAUTH_CLIENT_ID,
   });
   const {email} = ticket.getPayload();
+  if (!validEmailOrgs.includes(email.split('@')[1])) {
+    throw new Error('Email is not in a valid organization');
+  }
   let user = await prisma.user.findUnique({where: {email}});
   if (!user) {
     user = await prisma.user.create({
@@ -28,6 +34,7 @@ const setLocals = async (req, res) => {
     host: `${ENVIRONMENT === 'dev' ? 'http' : 'https'}://${req.get('host')}`,
     signedIn: isSignedIn(req),
     admin: await isAdmin(req),
+    failMessage: '',
   };
 };
 

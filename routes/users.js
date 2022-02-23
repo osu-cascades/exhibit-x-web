@@ -7,8 +7,12 @@ const prisma = new PrismaClient();
 
 router.post('/signIn', async function(req, res, next) {
   const {credential} = req.body;
-  req.session.user = await signIn(credential);
-  res.redirect('/');
+  signIn(credential)
+      .then((user) => {
+        req.session.user = user;
+        res.redirect('/');
+      })
+      .catch((_) => res.redirect('/?event=invalid_email'));
 });
 
 router.post('/updateUser', checkIsAdmin, async function(req, res, next) {
