@@ -20,7 +20,7 @@ Exhibit-x-web is a web app that serves three main purposes
 
 ## Roadmap
 - [ ] API security before deployment
-- [ ] Sketch writing guidance for users
+- [x] Sketch writing guidance for users
 - [x] Sketch rotation
 - [x] Email users when sketch status changes
 - [ ] P5js support
