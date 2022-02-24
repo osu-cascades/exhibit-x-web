@@ -23,3 +23,20 @@ paths:
           responses:
             '200':
               description: OK
+
+
+    /exhibit/current:
+        get:
+          summary: Returns information on the currently running sketch
+          responses:
+            '200':
+              description: Get current display info. Payload depends on type
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      payload:
+                        type: object
