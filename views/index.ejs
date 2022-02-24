@@ -22,6 +22,37 @@
     to ensure that they work properly with the <%=title%> setup and adhear to
     OSU's guidelines.
   </p>
+  <h2>Guidelines for submitting a sketch</h2>
+  <ul>
+    <li>
+      Sketches must not contain any content offensive to any ethnic, religious
+      or sexual group.
+    </li>
+    <li>A sketch must be able to be run in processing version 3.</li>
+    <li>
+      The main file processing file should have the same name as the zip file's
+      name and should be at the root (the default file structure for
+      processing).
+    </li>
+    <li>
+      A sketch should be full screen (1920x1080 resolution). This can be
+      achieved putting <code>fullScreen()</code> or
+      <code>size(1920, 1080)</code> in the <code>setup()</code> function of your
+      sketch.
+    </li>
+    <li>
+      The processing libraries that <%=title%> supports are
+      <a href="https://shiffman.net/p5/kinect/">Kinect for Processing</a>,
+      <a href="https://github.com/shiffman/Box2D-for-Processing">Box2d</a>,
+      <a href="http://www.haptic-data.com/toxiclibsjs/"> Toxic Libs</a>,
+      <a href="https://github.com/jrc03c/queasycam">Queasy Cam</a>, and
+      <a href="https://github.com/atduskgreg/opencv-processing"
+        >OpenCV for Processing</a
+      >. If you like to include a processing library not listed, email us at
+      <a href="mailto:exhibitxDev@gmail.com">exhibitxDev@gmail.com</a>
+      and we can see if we can add support for it on the Exhibit.
+    </li>
+  </ul>
   <h2>Submit a Processing "Sketch"</h2>
   <% if(signedIn) { %>
   <form
