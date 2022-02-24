@@ -1,0 +1,9 @@
+openapi: 3.0.0
+info:
+  title: Exhibit X Web
+  version: 0.1.0
+servers:
+  - url: https://exhibitx.heroku.com
+    description: Optional server description, e.g. Main (production) server
+paths:
+    
