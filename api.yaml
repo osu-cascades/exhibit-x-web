@@ -4,6 +4,22 @@ info:
   version: 0.1.0
 servers:
   - url: https://exhibitx.heroku.com
-    description: Optional server description, e.g. Main (production) server
+    description: Production
 paths:
-    
+    /exhibit/heartbeat:
+        post:
+          summary: Indicates the exhibit is still up and reports state to server
+          requestBody:
+            required: true
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    activeDisplayId:
+                      type: integer
+                    activeDisplayType:
+                      type: string
+          responses:
+            '200':
+              description: OK
