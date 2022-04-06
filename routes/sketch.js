@@ -30,12 +30,17 @@ router.post('/', checkSignIn, async function(req, res, next) {
       console.log(err, err.stack);
       res.sendStatus(400);
     } else {
-      await sendEmail({
-        to: email,
-        subject: `Your Sketch ${title} has been submitted`,
-        html: await ejs.renderFile('./emailTemplates/submit.ejs', {title}),
-      });
-      res.redirect('/?event=upload_successful');
+      try {
+        await sendEmail({
+          to: email,
+          subject: `Your Sketch ${title} has been submitted`,
+          html: await ejs.renderFile('./emailTemplates/submit.ejs', {title}),
+        });
+      } catch (error) {
+        console.error(error);
+      } finally {
+        res.redirect('/?event=upload_successful');
+      }
     }
   });
 });
@@ -79,12 +84,17 @@ router.post('/select', checkIsAdmin, async function(req, res, next) {
   const {title, userEmail} = await prisma.sketch.findUnique({
     where: {id: parseInt(req.body.sketchId)},
   });
-  await sendEmail({
-    to: userEmail,
-    subject: `Your Sketch, ${title}, is currently being displayed! 🙀`,
-    html: await ejs.renderFile('./emailTemplates/selected.ejs', {title}),
-  });
-  res.redirect('/admin');
+  try {
+    await sendEmail({
+      to: userEmail,
+      subject: `Your Sketch, ${title}, is currently being displayed! 🙀`,
+      html: await ejs.renderFile('./emailTemplates/selected.ejs', {title}),
+    });
+  } catch (error) {
+    console.error(error);
+  } finally {
+    res.redirect('/admin');
+  }
 });
 
 // approves a sketch
@@ -100,12 +110,17 @@ router.post('/approve', checkIsAdmin, async function(req, res, next) {
     },
     data: {status: 'APPROVED'},
   });
-  await sendEmail({
-    to: userEmail,
-    subject: `Your Sketch ${title} has been approved 🥳`,
-    html: await ejs.renderFile('./emailTemplates/approve.ejs', {title}),
-  });
-  res.redirect('/admin');
+  try {
+    await sendEmail({
+      to: userEmail,
+      subject: `Your Sketch ${title} has been approved 🥳`,
+      html: await ejs.renderFile('./emailTemplates/approve.ejs', {title}),
+    });
+  } catch (error) {
+    console.error(error);
+  } finally {
+    res.redirect('/admin');
+  }
 });
 
 // rejects a sketch
@@ -121,15 +136,20 @@ router.post('/reject', checkIsAdmin, async function(req, res, next) {
     },
     data: {status: 'REJECTED', rejectionReason},
   });
-  await sendEmail({
-    to: userEmail,
-    subject: `Your Sketch ${title} has been rejected`,
-    html: await ejs.renderFile(
-        './emailTemplates/reject.ejs',
-        {title, rejectionReason},
-    ),
-  });
-  res.redirect('/admin');
+  try {
+    await sendEmail({
+      to: userEmail,
+      subject: `Your Sketch ${title} has been rejected`,
+      html: await ejs.renderFile(
+          './emailTemplates/reject.ejs',
+          {title, rejectionReason},
+      ),
+    });
+  } catch (error) {
+    console.error(error);
+  } finally {
+    res.redirect('/admin');
+  }
 });
 
 router.post('/pull', checkOwnsSketch, async function(req, res, next) {
