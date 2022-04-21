@@ -3,6 +3,9 @@ const router = new express.Router();
 const prisma = require('../prisma');
 
 router.post('/heartbeat', async function(req, res, next) {
+  // Delete all the old heartbeats so that we don't fill the db
+  await prisma.exhibitHeartbeat.deleteMany({});
+
   await prisma.exhibitHeartbeat.create({data: {
     activeDisplayId: parseInt(req.body.activeDisplayId) || -1,
     activeDisplayType: req.body.activeDisplayType || '',
