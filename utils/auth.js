@@ -29,7 +29,7 @@ const signIn = async (token) => {
 
 const setLocals = async (req, res) => {
   res.locals = {
-    title: 'Exhbit X',
+    title: 'Exhibit X',
     oauthClientID: process.env.OAUTH_CLIENT_ID,
     host: `${ENVIRONMENT === 'dev' ? 'http' : 'https'}://${req.get('host')}`,
     signedIn: isSignedIn(req),
