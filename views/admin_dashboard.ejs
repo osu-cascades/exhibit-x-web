@@ -1,6 +1,20 @@
 <%- include('header', {admin: admin, signedIn: signedIn}); -%>
 
 
+<script>
+  window.onload = () => {
+    console.log("Hello");
+    $('button[data-bs-toggle="tab"]').on('show.bs.tab', function(e) {
+        console.log("Tab shown");
+        localStorage.setItem('activeTab', $(e.target).attr('data-bs-target'));
+    });
+    var activeTab = localStorage.getItem('activeTab');
+    if(activeTab){
+        $('button[data-bs-target="' + activeTab + '"]').tab('show');
+    }
+  };
+</script>
+
 <div class="container">
 
         <!-- Exhibit status table -->
